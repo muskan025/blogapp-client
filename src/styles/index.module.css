@@ -1,0 +1,222 @@
+/* colors */
+/* font */
+/* spacers */
+/* Breakpoints */
+*, *::after, *::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #1D1D1D;
+  color: #d9d9d9;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+main {
+  padding-block: 145px 60px;
+  padding-inline: 60px;
+}
+
+.home {
+  padding: 0 0 60px 0;
+}
+
+a {
+  color: rgba(255, 255, 255, 0.8705882353);
+  text-decoration: inherit;
+  margin: 0.5rem;
+}
+
+a:hover {
+  color: #F67280;
+}
+
+h1 {
+  font-size: clamp(28px, 5vw, 40px);
+  line-height: 1.4;
+}
+
+img {
+  width: 100%;
+  height: auto;
+  vertical-align: middle;
+  font-style: italic;
+  color: inherit;
+  font-weight: clamp(10px, 1.5vw, 12px);
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+}
+
+button {
+  border-radius: clamp(15px, 2vw, 20px);
+  border: 1px solid transparent;
+  padding: clamp(8px, 1.5vw, 10px) clamp(15px, 2.5vw, 20px);
+  font-size: clamp(14px, 2vw, 16px);
+  font-weight: 600;
+  font-family: inherit;
+  background-color: #F67280;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.5s ease-in-out;
+  margin-top: clamp(20px, 3vw, 30px);
+}
+
+button:hover {
+  border: 1px solid #F67280;
+  background-color: #1D1D1D;
+}
+
+.form_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding-inline: 40px;
+}
+
+.form_sub_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  width: 644px;
+  max-width: 100%;
+  background-color: #2B2B2B;
+  border-radius: 20px;
+  padding: 30px;
+  color: #d9d9d9;
+}
+.form_sub_container p {
+  font-size: clamp(13px, 2vw, 15px);
+  text-align: center;
+}
+.form_sub_container a {
+  font-weight: 600;
+}
+
+.explore_blogs .searchbar {
+  padding: 20px 20px 0 20px;
+  border-radius: 20px;
+  background: #2B2B2B;
+  width: 81vw;
+  margin-inline: auto;
+  margin-bottom: 20px;
+}
+.explore_blogs .niche_name {
+  color: #F67280;
+}
+
+.user_profile .settings {
+  display: grid;
+  gap: 18px;
+  background: #2B2B2B;
+  border-radius: 20px;
+  width: 200px;
+  max-width: 200px;
+  position: absolute;
+  right: 60px;
+  padding: 7px;
+}
+.user_profile .settings:hover {
+  max-width: 185px;
+  transition: max-height 0.5s ease-in-out;
+}
+.user_profile .settings .settings_header {
+  padding: 5px 10px;
+  background: #2B2B2B;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: auto;
+  cursor: pointer;
+  border-radius: 10px;
+  position: relative;
+}
+.user_profile .settings .settings_header span {
+  font-size: clamp(13px, 2vw, 15px);
+}
+.user_profile .settings .settings_header .icon {
+  font-size: 1.5rem;
+}
+.user_profile .settings .underline {
+  padding: 0.8px;
+  background-color: gray;
+  position: absolute;
+  width: 90%;
+  bottom: -3px;
+}
+.user_profile .settings .options {
+  padding: 10px;
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+}
+.user_profile .settings .options:hover {
+  opacity: 0.5;
+}
+.user_profile .settings .options:nth-child(3) {
+  color: rgba(255, 0, 0, 0.6156862745);
+}
+.user_profile .settings .options:nth-child(1)::after, .user_profile .settings .options:nth-child(2)::after {
+  content: "";
+  position: absolute;
+  left: 5%;
+  bottom: 0;
+  width: 90%;
+  height: 1px;
+  background-color: rgba(128, 128, 128, 0.5);
+}
+.user_profile .settings .underline {
+  padding: 0.8px;
+  background-color: gray;
+  position: absolute;
+  width: 90%;
+  top: 5px;
+}
+
+.error_page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+.error_page img {
+  max-width: 825px;
+}
+.error_page p {
+  font-size: clamp(20px, 6vw, 40px);
+  font-weight: 600;
+  text-wrap: balance;
+  text-align: center;
+}
+
+[title] {
+  position: relative;
+  cursor: help;
+  border-radius: 3px;
+  background-color: red;
+}
+
+[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px;
+  background-color: #333;
+  color: white;
+  border-radius: 3px;
+  font-size: 14px;
+  white-space: nowrap;
+}/*# sourceMappingURL=index.module.css.map */

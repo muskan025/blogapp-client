@@ -1,0 +1,59 @@
+/* colors */
+/* font */
+/* spacers */
+/* Breakpoints */
+.navbar {
+  padding: clamp(16px, 2.5vw, 24px);
+  padding-inline: clamp(24px, 4vw, 48px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2B2B2B;
+  width: 100%;
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  opacity: 0.7;
+}
+
+.brandname {
+  font-size: 2rem;
+  color: #F67280;
+  font-style: oblique;
+  font-weight: 600;
+}
+
+.blogname {
+  color: rgba(255, 255, 255, 0.8705882353);
+}
+
+.nav_links_center > * {
+  margin-inline: 2rem;
+}
+
+[class*=nav_links], .nav_links {
+  font-size: clamp(13px, 2vw, 15px);
+  font-weight: 700;
+}
+
+.profile_img {
+  width: 100%;
+  max-width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  background-color: grey;
+  overflow: hidden;
+}
+.profile_img img {
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  font-size: 600;
+}
+.profile_img a {
+  margin: 0;
+}
+
+.active_Link {
+  color: #F67280;
+}/*# sourceMappingURL=styles.module.css.map */

@@ -1,0 +1,90 @@
+/* colors */
+/* font */
+/* spacers */
+/* Breakpoints */
+h2 {
+  font-size: clamp(18px, 3vw, 22px);
+  font-weight: 900;
+  position: relative;
+  margin-bottom: 15px;
+}
+
+h2:before {
+  background-color: #f67280;
+  display: block;
+  position: absolute;
+  content: "";
+  left: auto;
+  top: -2px;
+  width: 30px;
+  height: 2px;
+}
+
+.input {
+  padding: 15px 20px;
+  font-size: 14px;
+  width: 100%;
+  font-family: inherit;
+  border-radius: 20px;
+  background-color: #1D1D1D;
+  border: none;
+  outline: transparent;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  color: #d9d9d9;
+  margin-bottom: 20px;
+}
+
+.input::-moz-placeholder {
+  font-size: 16px;
+  font-weight: 500;
+  color: #d9d9d9;
+}
+
+.input::placeholder {
+  font-size: 16px;
+  font-weight: 500;
+  color: #d9d9d9;
+}
+
+.file_input_container {
+  position: relative;
+  width: 100%;
+}
+
+.file_input {
+  opacity: 0;
+  width: 100%;
+}
+
+.file_input_label {
+  position: absolute;
+  left: 20px;
+}
+
+.image_icon {
+  font-size: 19px;
+  vertical-align: middle;
+}
+
+.create_blog_file {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+}
+.create_blog_file input::-moz-placeholder {
+  font-size: 16px;
+  color: #d9d9d9;
+}
+.create_blog_file input::placeholder {
+  font-size: 16px;
+  color: #d9d9d9;
+}
+.create_blog_file label {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  font-weight: 500;
+}/*# sourceMappingURL=styles.module.css.map */

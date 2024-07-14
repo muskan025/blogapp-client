@@ -1,0 +1,296 @@
+@import "../../../styles/var";
+
+.editor_container{
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    position: relative;
+   
+    .publish{
+        align-self: flex-end;
+        .popup{
+             position: absolute;
+             top:42%;
+             left:50%;
+             transform: translate(-50%,-50%);
+            //  width: 80%;
+            //  z-index: 10;
+        }
+       
+    }
+
+.text_editor{
+    width: 100%;
+    max-width: 920px;
+    padding: 15px 30px;
+    background-color: $bg-color;
+    min-height:800px;
+    border-radius: 20px;
+    margin-inline: auto;
+    display: flex;
+  flex-direction: column;
+
+  .publish{
+    align-self: flex-end;
+  }
+    .header{
+          display: flex;
+          flex-direction: column;
+
+        input,.create_blog_file{
+            background-color: transparent;
+            padding: 10px 5px;
+            margin: 0;
+            text-align: center;
+
+            &::placeholder{
+                font-size: 16px;
+                text-align: center;
+                
+             }
+ 
+        }
+       
+        .title_container>input{
+            font-size: $heading-h1
+        }
+        .title_container,.readtime_container,.thumbnail_container{
+            position: relative;
+             
+        }
+ 
+         .title_container:after,.readtime_container:after,.thumbnail_container:after{
+            bottom: 0;
+            content: "";
+            position: absolute;
+             height: 0.3px;
+            background-color:  grey;
+            width: 100%;
+            left: 0;
+        }
+
+        img{
+            max-height: 600px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin-top: 20px;
+        }
+
+        .no_underline{
+            &::after{
+                opacity: 0;
+            }
+        }
+
+    }
+    .content {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        margin-top: 20px;
+
+        :global {
+
+            .tox-tinymce{
+                border:2px solid $dark-theme;
+            }
+            .tox:not(.tox-tinymce-inline) .tox-editor-header {
+                box-shadow: none;
+               }
+        
+
+            .tox:not(.tox-tinymce-inline) .tox-editor-header{
+                background-color: $dark-theme;
+            }
+
+             
+            // Editor area 
+            .tox-edit-area__iframe {
+                background-color: $dark-theme !important;
+            }
+            
+            .tox .tox-edit-area::before{
+                border:none;
+            }
+            // Toolbar
+            // .tox-toolbar__primary {
+            //     background-color: darken($dark-theme, 5%) !important;
+            // }
+
+            .tox .tox-toolbar, .tox .tox-toolbar__overflow, .tox .tox-toolbar__primary {
+                background: url("data:image/svg+xml;charset=utf8,%3Csvg height='39px' viewBox='0 0 40 39px' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='38px' width='100' height='1' fill='%23222f3e'/%3E%3C/svg%3E") left 0 top 0 darken($bg-color, 5%) !important;
+            }
+
+            // Buttons
+            .tox .tox-tbtn {
+                color: white !important;
+                background-color:  $bg-color;
+            }
+
+            .tox .tox-tbtn svg {
+                fill: black !important;
+            }
+
+            .tox-tbtn.tox-tbtn--select.tox-tbtn--bespoke {
+                background-color: $bg-color;
+                color: black;
+            }
+
+            tox .tox-tbtn--enabled:focus::after, .tox .tox-tbtn:focus::after{
+                box-shadow: 0 0 0 2px rgb(172, 170, 170);
+            }
+
+            // Dropdowns
+            .tox .tox-mbtn, .tox .tox-split-button {
+                color: $f-color !important;
+            }
+
+            // Hover states
+            .tox .tox-tbtn:hover, .tox .tox-split-button:hover {
+                background-color: $dark-theme !important;
+            }
+
+            .tox .tox-tbtn--enabled, .tox .tox-tbtn--enabled:hover {
+                background-color: $bg-color !important;
+            }
+
+            // Content area
+            .tox-edit-area {
+                background-color: $dark-theme !important;
+             }
+
+            // Status bar
+            .tox-statusbar {
+                background-color:  $dark-theme !important;
+                color: black !important;
+            }
+
+            // Dialogs
+            .tox .tox-dialog {
+                background-color: $dark-theme !important;
+               
+            }
+
+            ._text_editor_r01ww_5 ._content_r01ww_58 .tox .tox-dialog__header, ._text_editor_r01ww_5 ._content_r01ww_58 .tox .tox-dialog__footer
+            .tox, .tox-dialog__header, .tox .tox-dialog__footer {
+                background-color:  $dark-theme !important;
+                color:  $f-color !important;
+            }
+
+            .tox .tox-dialog__body-content .tox-form__group h1:last-child, .tox .tox-dialog__body-content .tox-form__group h2:last-child, .tox .tox-dialog__body-content .tox-form__group p:last-child{
+                color: $f-color;
+            }
+           
+            .tox .tox-button::before{
+                box-shadow: none;
+            }
+            .tox:not([dir=rtl]) .tox-dialog__footer .tox-dialog__footer-end>*, .tox:not([dir=rtl]) .tox-dialog__footer .tox-dialog__footer-start>*{
+                box-sizing: border-box;
+                border:none;
+                background-color: $primary-accent;
+
+                &:hover{
+                    background-color: $dark-theme;
+                    border:1px solid $bg-color
+                }
+            }
+
+            
+
+            // Dropdown menus
+            .tox .tox-menu {
+                background-color: $dark-theme !important;
+                border-color: lighten($dark-theme, 10%) !important;
+            }
+
+            .tox .tox-collection__item {
+                color: $f-color !important;
+            }
+
+            .tox .tox-collection__item--active {
+                background-color: lighten($dark-theme, 10%) !important;
+            }
+
+            .tox .tox-toolbar,
+            .tox .tox-toolbar__overflow,
+            .tox .tox-toolbar__primary,
+            .tox .tox-tbtn,
+            .tox .tox-mbtn,
+            .tox .tox-split-button,
+            .tox .tox-statusbar,
+            .tox .tox-dialog,
+            .tox .tox-dialog__header,
+            .tox .tox-dialog__footer,
+            .tox .tox-menu,
+            .tox .tox-collection__item {
+              color: $f-color !important;
+            }
+
+            .tox .tox-statusbar {
+                border-top: 1px solid $bg-color;
+                color: $f-color !important;
+              }
+
+            .tox .tox-statusbar a,
+      .tox .tox-statusbar__path-item,
+      .tox .tox-statusbar__wordcount,
+      .tox .tox-statusbar__branding {
+        color:  $f-color !important;
+      }
+
+      //modals
+      .tox .tox-dialog-wrap {
+        background-color: rgba(0, 0, 0, 0.8) !important;
+      }
+
+      .tox .tox-dialog,
+      .tox .tox-dialog__header,
+      .tox .tox-dialog__footer,
+      .tox .tox-dialog__body {
+        background-color: $dark-theme !important;
+        color: $f-color !important;
+      }
+
+      .tox .tox-dialog__body-content * {
+        color: $f-color !important;
+      }
+
+      .tox .tox-dialog__footer {
+        border-top: 1px solid $bg-color !important;
+      }
+
+      .tox .tox-dialog__footer .tox-button {
+        background-color: $primary-accent !important;
+        border: none !important;
+        color: white !important;
+      }
+
+      .tox .tox-dialog__footer .tox-button:hover {
+        background-color: darken($primary-accent, 10%) !important;
+      }
+
+      .tox .tox-textfield,
+      .tox .tox-listboxfield .tox-listbox,
+      .tox .tox-textarea {
+        background-color: $bg-color !important;
+        border-color: lighten($bg-color, 10%) !important;
+        color: $f-color !important;
+      }
+
+      /* Increase specificity for modal elements */
+      body .tox .tox-dialog {
+        border: 1px solid $bg-color !important;
+      }
+
+      /* Use !important for critical styles that aren't being applied */
+      .tox .tox-dialog__body-content .tox-form__group h1,
+      .tox .tox-dialog__body-content .tox-form__group h2,
+      .tox .tox-dialog__body-content .tox-form__group p {
+        color: $f-color !important;
+      }
+
+        }
+    }
+}
+}
+ 

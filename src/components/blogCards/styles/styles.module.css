@@ -1,0 +1,10 @@
+.card_grid {
+  margin-top: 100px;
+  max-width: 1200px;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  row-gap: 62px;
+  -moz-column-gap: 32px;
+       column-gap: 32px;
+}/*# sourceMappingURL=styles.module.css.map */
