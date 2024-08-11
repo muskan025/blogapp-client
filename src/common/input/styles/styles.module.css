@@ -87,4 +87,9 @@ h2:before {
   transform: translate(-50%, -50%);
   font-size: 16px;
   font-weight: 500;
+}
+
+.error {
+  color: red;
+  font-size: clamp(11px, 1.8vw, 13px);
 }/*# sourceMappingURL=styles.module.css.map */

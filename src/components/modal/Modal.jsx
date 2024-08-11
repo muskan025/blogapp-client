@@ -17,7 +17,7 @@ const Modal = ({isOpen,onClose,children}) => {
     }
   }, [isOpen]);
 
-  if (!isOpen  ) return null;
+  if (!isOpen ) return null;
     
   return createPortal(
     <div className={`${styles.modal_overlay} ${!isOpen?styles.hide:''}`} onClick={onClose}>

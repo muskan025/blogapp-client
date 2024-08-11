@@ -1,10 +1,13 @@
 /* eslint-disable react/prop-types */
-import profileImg from "../../assets/profile1.jpg"
-import styles from "./styles/styles.module.css"
+ import styles from "./styles/styles.module.css"
 import { Link } from "react-router-dom"
 import { InputField } from "../../common/input/Form"
+import { useSelector } from "react-redux"
 
 const FollowListModal = ({ heading, name }) => {
+
+    const {user} = useSelector((state)=>{state.userData})
+    const {profileImg} =user
     return (
         
         <div className={styles.followlist_container}>

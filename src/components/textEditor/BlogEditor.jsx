@@ -1,98 +1,213 @@
-import { useState, useRef } from "react";
-import { Editor } from '@tinymce/tinymce-react';
+import { useMemo, useRef, useState} from "react";
 import Lottie from "lottie-react";
 import { FileField, InputField } from "../../common/input/Form";
-import  popup from "../../assets/popup.json";
+import popup from "../../assets/popup.json";
 import styles from "./styles/styles.module.css";
-
+import { toast } from "react-toastify";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { useCreateBlogMutation, useUpdateBlogMutation, useUploadImgMutation } from "../../reduxToolkit/slices/apiSlice";
+import { useLocation } from "react-router-dom";
 const BlogEditor = () => {
-  const [image, setImage] = useState({ preview: null, name: '' });
-  const [content, setContent] = useState("");
+
   const [showPopup, setShowPopup] = useState(false);
+  const {state} = useLocation()
+ 
+const [blogContent, setBlogContent] = useState({
+  title: state?.title || "",
+  readTime: state?.readTime || "",
+});
+const [editorContent, setEditorContent] = useState(state?.textBody || "");
+  const [thumbnail, setThumbnail] = useState({
+    file: null,
+    preview: null
+  })
+ 
+  const [upDateBlog, { isUpdateLoading }] = useUpdateBlogMutation()
+  const [createBlog, { isLoading }] = useCreateBlogMutation()
+  const [uploadImg] = useUploadImgMutation()
+  // const modules = {
+  //   toolbar: [
+  //     [{ font: [] }],
+  //     [{ header: [1, 2, 3, 4, 5, 6, false] }],
+  //     ["bold", "italic", "underline", "strike"],
+  //     [{ color: [] }, { background: [] }],
+  //     [{ script: "sub" }, { script: "super" }],
+  //     ["blockquote", "code-block"],
+  //     [{ list: "ordered" }, { list: "bullet" }],
+  //     [{ indent: "-1" }, { indent: "+1" }, { align: [] }],
+  //     ["link", "image", "video"],
+  //     ["clean"],
+  //   ]
+  // }
   const editorRef = useRef(null);
 
+
+  const imageHandler = () => {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+
+      // Replace with your own upload logic
+      const response = await uploadImg(formData).unwrap()
+      const url = `http://localhost:8000/${response.url}` ;
+ 
+      const range = editorRef.current.getEditor().getSelection();
+      editorRef.current.getEditor().insertEmbed(range.index, 'image', url);
+    };
+  };
+
+   const modules = useMemo(() => ({
+    toolbar: {
+      container: [
+        [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+        [{ size: [] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+        ['link', 'image', 'video'],
+        ['clean'],
+        [{ 'align': [] }],
+      ],
+      handlers: {
+        image: imageHandler,
+      },
+    },
+  }), []);
+
+ 
   function handleImg(e) {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage({
-          preview: reader.result,
-          name: file.name
-        });
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setImage({ preview: null, name: '' });
+ 
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        toast.error("Invalid file type. Please upload a JPEG, PNG, or GIF image.");
+        return;
+      }
+
+      setThumbnail({
+        file: file,
+        preview: URL.createObjectURL(file)
+      });
     }
   }
 
-  function handleEditorChange(content, editor) {
-    setContent(content);
+  function handleBlogContent(e) {
+    const { name, value } = e.target
+
+    setBlogContent((prev) => ({ ...prev, [name]: value }))
   }
 
-  function handlePublish(){
-    setShowPopup(true)
+  async function handlePublish(e) {
 
-    setTimeout(()=>{ setShowPopup(false)},3000)
+    e.preventDefault()
+
+    console.log("b4 publish")
+    const formData = new FormData();
+    
+    const unchangedThumbnail = state?.thumbnail && !thumbnail.file
+    const unchangedTitle = state?.thumbnail === blogContent.title
+    const unchangedReadTime = state?.readTime === blogContent.readTime
+    const unchangedContent = state?.textBody ===  editorContent
+
+    if(!unchangedThumbnail){
+
+      if (!thumbnail.file) {
+        toast.error("Please upload a thumbnail image.");
+        return;
+      }
+      formData.append('file', thumbnail.file,thumbnail.file.name);
+  
+       console.log("publish:", formData.get('file'))
+    }
+      
+    try {
+      const response = !unchangedThumbnail && await uploadImg(formData).unwrap()
+
+      const blogFormData = new FormData();
+      if(response?.status === 200 || state){
+        blogFormData.append('title', unchangedTitle ? state?.title : blogContent.title);
+        blogFormData.append('readTime',unchangedReadTime ? state?.readTime : blogContent.readTime);
+        blogFormData.append('textBody',unchangedContent ? state?.textBody : editorContent);
+        blogFormData.append('thumbnail',unchangedThumbnail ? state?.thumbnail : response.url);
+ 
+        const blogResponse = state ? await upDateBlog({
+          data:blogFormData,
+          blogId:state._id
+        }).unwrap() : 
+        await createBlog(blogFormData).unwrap()
+
+        if (blogResponse.status === 201 || blogResponse.status === 200) {
+           setShowPopup(true)
+          toast.success("Whoah! You made a mark 🤩")
+          setTimeout(() => { setShowPopup(false) }, 3000)
+        } else {
+          toast.error(blogResponse?.message || "Error creating blog post")
+        }
+      } else {
+        toast.error(response?.message || "Error uploading image")
+      }
+
+      }
+    catch (error) {
+      console.error("Something went wrong", error)
+    }
+  
   }
-
+ 
   return (
-    <div  className={styles.editor_container}>
-      <div className={styles.publish}>
+    <div className={styles.editor_container}>
+      
       {showPopup && (
+         <div className={styles.popup_overlay}>
           <Lottie
             animationData={popup}
             loop={true}
             autoplay={true}
-            // Adjust size as needed
             className={styles.popup}
           />
+          </div>
         )}
-      <button onClick={handlePublish}>Publish</button>
+      
+      <div className={styles.publish}>
+      <button onClick={handlePublish}>{isLoading || isUpdateLoading ? 'Loading...' :( state ? 'Update' :'Publish')}</button>
       </div>
-      <div className={styles.text_editor}>
        
-      <form className={styles.header}>
-        <div className={`${styles.thumbnail_container} ${image.name !== '' ? styles.no_underline : ''}`}> 
-          <FileField name="thumbnail" placeholder="Add thumbnail here..." className={styles.create_blog_file} image={image} onChange={handleImg}/>
-        </div>
-        {image.preview && <img src={image.preview} alt="Thumbnail Image" />}
+      <div className={styles.text_editor}>
+        <form className={styles.header} encType="multipart/form-data">
+          <div className={`${styles.thumbnail_container} ${thumbnail?.name !== '' ? styles.no_underline : ''}`}>
+            <FileField name="thumbnail" placeholder="Add thumbnail here..." className={styles.create_blog_file} image={thumbnail.file} onChange={handleImg} />
+          </div>
+          {thumbnail?.preview && <img src={thumbnail?.preview} alt="Thumbnail Image" />}
 
-        <div className={`${styles.title_container} ${image.name !== '' ? styles.no_underline : ''}`}> 
-          <InputField type="text" name="title" placeholder="Add title here..." className={styles.create_blog_file} />
+          <div className={`${styles.title_container} ${thumbnail?.name !== '' ? styles.no_underline : ''}`}>
+            <InputField type="text" name="title" placeholder=" Add title here..." className={styles.create_blog_file} onChange={handleBlogContent} value={blogContent.title}/>
+          </div>
+
+          <div className={`${styles.readtime_container} ${thumbnail?.name !== '' ? styles.no_underline : ''}`}>
+            <InputField type="text" name="readTime" placeholder="Add read time in mins here..." onChange={handleBlogContent} value={blogContent.readTime} />
+          </div>
+        </form>
+
+        <div className={styles.content}>
+          <ReactQuill
+          ref={editorRef}
+           modules={modules}
+            theme="snow"
+            placeholder="Content goes here..."
+            onChange={setEditorContent}
+            value={editorContent}
+            formats={['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'indent', 'link', 'image', 'video', 'align']}
+          />
         </div>
 
-        <div className={`${styles.readtime_container} ${image.name !== '' ? styles.no_underline : ''}`}>
-          <InputField type="text" name="readTime" placeholder="Add blog read time here..." />
-        </div>
-      </form>
-
-      <div className={styles.content}>
-        <Editor className={styles.tinyMCEEditor}
-          onInit={(evt, editor) => editorRef.current = editor}
-          apiKey='ynmpsk1bkjymwd7m13anncmo5e0rwimyy2k8nrwhkv30m9na'
-          init={{
-            height: 500,
-            menubar: false,
-            selector: 'textarea',
-            ui_mode: 'split',
-            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate mentions tableofcontents footnotes mergetags autocorrect typography inlinecss markdown',
-            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-            content_style: `
-            body {
-              font-family: Helvetica, Arial, sans-serif;
-              font-size: 14px;
-              background-color: #1e1e1e;
-              color: #e0e0e0;
-            }
-          `,
-          }}
-          value={content}
-          onEditorChange={handleEditorChange}
-        />
       </div>
-    </div>
     </div>
   );
 };
@@ -101,12 +216,3 @@ export default BlogEditor;
 
 
 
-  {/* <textarea name="textBody" 
-         value={content}
-          onChange={handleContentChange}
-          placeholder="Write your content here..."
-          className={styles.content_textarea} autoFocus></textarea> */}  {/* <textarea name="textBody" 
-         value={content}
-          onChange={handleContentChange}
-          placeholder="Write your content here..."
-          className={styles.content_textarea} autoFocus></textarea> */}

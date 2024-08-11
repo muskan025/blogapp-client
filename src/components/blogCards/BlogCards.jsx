@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
 import BlogCard from "../blogCard/BlogCard"
 import styles from "./styles/styles.module.css"
-import { blogs } from "../../../data"
-
-const BlogCards = ({filter="food"}) => {
-
+  
+const BlogCards = ({filter="food", data,comp}) => {
+ 
   // let filteredBlogs=[]
   // console.log("before if",filter)
 
@@ -26,14 +25,24 @@ const BlogCards = ({filter="food"}) => {
     <section className={styles.card_grid}>
 
       {
-        blogs.length > 0 && blogs.map((blog) => 
+        data?.length>0 && data?.map((blog) => 
           {
-            const {userId,blogId, blogImage, niche, blogTitle, textBody, username, date } = blog
+            const{_id,title,thumbnail,readTime,textBody,likesCount,userId,createdAt} = blog
 
-       return <BlogCard key = {blogId} userId={userId} blogId={blogId} blogImage = { blogImage } niche = { niche } blogTitle = { blogTitle } textBody = { textBody } username = { username } date = { date } data={blog}/>
+            const createdAtDate = new Date(createdAt);
+            const dateNum = createdAtDate.getDate();
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const month = monthNames[createdAtDate.getMonth()];
+            const year = createdAtDate.getFullYear();
+            const date = `${dateNum} ${month}, ${year}`
+            const image = `http://localhost:8000/${thumbnail}`
+            const profileImage = `http://localhost:8000/${userId.profileImg}`
+            const blogData = {...blog, date,thumbnail:image}
+ 
+       return <BlogCard key = {_id} user={userId} userId={userId._id} profileImg={profileImage} blogId={_id} blogImage = {image} niche ="productivity" blogTitle = { title } textBody = { textBody } username = { userId.username } date = {date} readTime={readTime} likes={likesCount} data={blogData} comp={comp}/>
           })
       }
-
+ 
     </section>
   )
 }

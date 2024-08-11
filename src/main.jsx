@@ -1,6 +1,6 @@
  import { createRoot } from 'react-dom/client'
  import { RouterProvider, createBrowserRouter } from 'react-router-dom'
- import App from './App.jsx'
+import App from './App.jsx'
 import Error from './pages/Error.jsx'
 import Home from './pages/Home.jsx'
 import ExploreBlogs from './pages/ExploreBlogs.jsx'
@@ -8,14 +8,21 @@ import SignUp from './pages/SignUp.jsx'
 import Login from './pages/Login.jsx'
 import AboutUs from './pages/AboutUs.jsx'
 import './styles/index.module.css'
-import ViewerProfile from './pages/ViewerProfile.jsx'
+import EditProfile from './components/editProfile/EditProfile.jsx'
 import SingleBlog from './pages/SingleBlog.jsx'
+import ViewerProfile from './pages/ViewerProfile.jsx'
 import CreateBlog from './pages/CreateBlog.jsx'
+import { store } from './reduxToolkit/store.js'
+import {Provider} from 'react-redux'
+import PrivateRoute from './components/PrivateRoute.jsx'
+import { PersistGate } from 'redux-persist/integration/react'   
+import { persistStore } from 'redux-persist'
+
+let persistor = persistStore(store)
 
 const router = createBrowserRouter([
   {
-    path:'/',
-    element:<App/>,
+    element: <App/>,
     errorElement:<Error/>,
     children : [
       {
@@ -35,9 +42,22 @@ const router = createBrowserRouter([
         element:<SingleBlog/>
       },
       {
-        path:'/create-blog',
-        element:<CreateBlog/>
+         element:<PrivateRoute/>,
+         children:[
+          {
+            path: '/create-blog/:username',
+            element: <CreateBlog />
+          },
+          // {
+          //   path: '/profile/:username',
+          //   element: <EditProfile/>
+          // },
+         ]
       },
+      {
+            path: '/profile/:username',
+            element: <ViewerProfile/>
+          },
       {
         path:'/sign-up',
         element:<SignUp/>
@@ -46,10 +66,6 @@ const router = createBrowserRouter([
         path:'/login',
         element:<Login/>
       },
-      {
-        path:'/profile/:userId',
-        element:<ViewerProfile/>
-      },
     ]
   }
 ], {
@@ -57,5 +73,11 @@ const router = createBrowserRouter([
 })
 
 const root = createRoot(document.getElementById('root'))
-
-root.render(<RouterProvider router={router}/>)
+root.render(
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <RouterProvider router={router} />
+    </PersistGate>
+  </Provider>
+)
+ 

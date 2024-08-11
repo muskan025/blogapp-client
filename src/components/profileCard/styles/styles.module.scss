@@ -8,13 +8,22 @@
       flex-direction: column;
       align-items: center;
     
-      img{
+      .profileImg{
         width: 100%;
         max-width:130px;
         height: 130px;
         border-radius: 50%;
        }
-    
+      .defaultImg{
+        width: 100%;
+        max-width:130px;
+        height: 130px;
+        border-radius: 50%;
+        padding: 3.5rem;
+        font-size: $heading-h1;
+       }
+      
+     
       .user_details{
         display: flex;
         flex-direction: column;
@@ -41,6 +50,22 @@
             }
         }
 
+        .profile_btns{
+          display: flex;
+          gap:5px;
+
+        a{
+            margin: 0;
+
+            &:hover{
+              color: $f-color;
+            }
+          }
+
+          .disabled:hover{
+             cursor:not-allowed;
+          }
+        }
         .niche {
           padding: 0.3em 0.8em;
           border-radius: 15px;
@@ -51,12 +76,16 @@
           cursor: pointer;
           transition: all 0.5s ease-out;
           margin-bottom: 10px;
+          vertical-align: bottom;
+          color: #ffffff;
+
         }
         
         .niche:hover {
           background-color: $dark-theme;
          }
       
+         
          .bio{
            margin-bottom: 12px;
            text-align: center;
@@ -78,7 +107,11 @@
         .social_media_icons{
           border-radius:50%;
           padding-block: 5px;
-          box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 10px rgba(221, 220, 220, 0.281);
+          
+          svg{
+            vertical-align: middle; 
+          }
         }
         .facebook{
           background-color:#3b5998;
@@ -88,8 +121,9 @@
           }
           
         .x{
-          background-color: #1D9BF0;
-        }
+          // background-color: #1D9BF0;
+          background-color: #000000;
+        } 
         .youtube{
           background-color: #FF0000;
         }

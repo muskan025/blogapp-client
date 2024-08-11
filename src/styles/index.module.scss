@@ -20,7 +20,38 @@
     font-family:  Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.4;
     font-weight: 400;
+     
   }
+
+::-webkit-scrollbar {
+  width: 10px;
+
+}
+
+::-webkit-scrollbar-track {
+  background-color: $dark-theme;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: grey;
+  border-radius: 10px;
+  
+  &:hover{
+    cursor: grab;
+  }
+  &:active{
+    cursor: grabbing;
+  }
+ }
+
+::-webkit-scrollbar-button {
+  background-color: $dark-theme;
+  height: 20px;
+  width: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+ 
+}
 
   main{
     padding-block: 145px 60px;
@@ -125,6 +156,13 @@ a{
 
 }
 
+.user_blogs{
+  h1{
+    text-align: center;
+    margin-top: 30px;
+  }
+}
+
 .user_profile{
   
   .settings{
@@ -225,26 +263,4 @@ a{
     text-wrap: balance;
     text-align: center;
   }
-}
-
-[title] {
-  position: relative;
-  cursor: help;
-  border-radius: 3px;
-  background-color: red;
-
-}
-
-[title]:hover::after {
-  content: attr(title);
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 5px;
-  background-color: #333;
-  color: white;
-  border-radius: 3px;
-  font-size: 14px;
-  white-space: nowrap;
 }

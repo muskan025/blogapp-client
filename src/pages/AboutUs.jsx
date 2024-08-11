@@ -21,7 +21,7 @@ export const AboutExcerpt = () => {
        
       <div className={styles.excerpt}>
         <h3>Our Vision</h3>
-        <p>At <b>LiveUp</b>, we believe that knowledge is an invaluable asset which expands on sharing. Our mission is to transform idle moments into productive time so that you leave no room for regret and enhance the quality of your life.We are on a mission to create a centered place of people who love to create a positive global impact by  sharing their invaluable experiences, their learnings from their mistakes.</p>
+        <p>At <b>LiveUp</b>, we believe that knowledge is an invaluable asset which expands on sharing. Our mission is to transform idle moments into productive time so that you leave no room for regret and enhance the quality of your life.We are on a mission to create a centered place of people who love to create a positive global impact by sharing their learnings from their mistakes,their invaluable experiences.</p>
       </div>
 
       <div className={styles.excerpt}>
@@ -65,7 +65,7 @@ export const AboutExcerpt = () => {
           </li>
         </ul>
       </div>
-      <div className={styles.quote_block}><BsQuote className={styles.quote_mark} /><h1><p>Discover, Grow, Thrive</p>
+      <div className={styles.quote_block}><BsQuote className={styles.quote_mark} /><h1><p>Explore, Excel, Expand</p>
       </h1>
       <i>~ Muskan Dodmani</i></div>
 
@@ -73,6 +73,11 @@ export const AboutExcerpt = () => {
         <h3>The LiveUp Experience</h3>
         <p>Imagine starting your day with a fascinating fact, pondering a new idea during your commute, or ending your evening with an inspiring story. With LiveUp, you&apos;re not just passing time - you&apos;re investing in yourself.</p>
       </div>
+
+      <div className={styles.quote_block}><BsQuote className={styles.quote_mark} /><h1>
+        <p>Be obsessed with making the most of your time.</p>
+      </h1>
+      <i>~ Muskan Dodmani</i></div>
 
       <div className={styles.excerpt}>
         <h3>Outcome</h3>
