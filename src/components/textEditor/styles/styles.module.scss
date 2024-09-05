@@ -5,6 +5,7 @@
     flex-direction: column;
     margin: 0 auto;
     position: relative;
+    padding: 0 20px;
    
     .popup_overlay {
         position: absolute;
@@ -33,6 +34,7 @@
 //    }
     .publish{
         align-self: flex-end; 
+        margin-bottom: 30px;
     }
 
 .text_editor{
@@ -102,8 +104,11 @@
         display: flex;
         flex-direction: column;
         margin-top: 20px;
+
+    }
        
+  
     }
 }
-}
+
  

@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import styles from "./styles/styles.module.css";
 import BannerImage from "../BannerImage";
+import aboutUs from '../../assets/about_us.jpg'
 import { BiHeart, BiShare, BiDotsHorizontalRounded} from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { AboutExcerpt } from "../../pages/AboutUs";
@@ -28,6 +29,31 @@ const BlogCard = ({ image = true, blogHeader = true, comp,user, titleFont,profil
      }
   }
 
+  async function handleShare() {
+    const shareData = {
+      title: blogTitle,
+      text: `Check out this blog post: ${blogTitle}`,
+      url: window.location.origin + location.pathname
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData)
+      }
+      catch (error) {
+        console.log("Error sharing", error)
+      }
+    }
+    else {
+      navigator.clipboard.writeText(shareData.url).then(() => {
+        alert("Link copied to clipboard")
+      }, (err) => {
+        alert("Link couldn't be copied", err)
+      })
+    }
+
+  }
+
   async function handleDelete(){
     try {
       const response = await deleteBlog(blogId).unwrap()
@@ -44,17 +70,16 @@ const BlogCard = ({ image = true, blogHeader = true, comp,user, titleFont,profil
           <Link to={`/blog/${blogId}`} state={data}>
             <img src={blogImage} alt="Blog Image" className={styles.blog_img} />
           </Link>
-        </div>) : (comp === "singleBlog" ? <BannerImage image={blogImage} blogId={blogId} /> : (<BannerImage image="" />))
+        </div>) : (comp === "singleBlog" ? <BannerImage image={blogImage} blogId={blogId} /> : (<BannerImage image={aboutUs} />))
       }
       {
         blogHeader && <div className={styles.blog}>
           <div className={styles.niche__interactive_container}>
-            <p className={styles.niche}>{niche}</p>
+          <Link to={`/explore-blogs`} state={niche}><p className={styles.niche}>{niche}</p></Link>
             {
              ( comp === "home" || comp === "profile") && <ul className={styles.interactive_container}>
                 { comp === "profile" && isOwnProfile && <li onClick={()=> setShowMore(!showMore)} className={styles.showmore_container}>
                   <BiDotsHorizontalRounded /> 
-                  
                     {showMore && <ul>
                     <li>
                       <BsPen /> 
@@ -74,7 +99,7 @@ const BlogCard = ({ image = true, blogHeader = true, comp,user, titleFont,profil
                   <span>{likes}</span>
                 </li>
                 <li>
-                  <BiShare className={styles.share} />
+                  <BiShare className={styles.share} onClick={handleShare}/>
                 </li>
 
               </ul>
@@ -89,7 +114,7 @@ const BlogCard = ({ image = true, blogHeader = true, comp,user, titleFont,profil
            {blogTitle}
          </h1>
          }
-          {(comp === "home" || comp==="profile")  && 
+          {comp !== "singleBlog" && 
           <p className={styles.info}>
             <BlogContent content={textBody}/>
           </p>

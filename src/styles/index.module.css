@@ -45,7 +45,6 @@ body {
 
 main {
   padding-block: 145px 60px;
-  padding-inline: 60px;
 }
 
 .home {
@@ -129,16 +128,40 @@ button:hover {
   font-weight: 600;
 }
 
+.explore_blogs {
+  width: 81vw;
+  margin-inline: auto;
+  text-align: center; /* Center all text content */
+  /* Responsive adjustments */
+}
 .explore_blogs .searchbar {
   padding: 20px 20px 0 20px;
   border-radius: 20px;
   background: #2B2B2B;
-  width: 81vw;
-  margin-inline: auto;
-  margin-bottom: 20px;
+  margin-bottom: 40px; /* Increased margin for better spacing */
 }
 .explore_blogs .niche_name {
   color: #F67280;
+}
+.explore_blogs h1 {
+  margin-bottom: 20px; /* Add space below the heading */
+}
+.explore_blogs p {
+  max-width: 800px; /* Limit the width for better readability */
+  margin: 0 auto 40px; /* Center the paragraph and add bottom margin */
+  line-height: 1.6; /* Improve line spacing for readability */
+}
+.explore_blogs b {
+  display: block; /* Put the bold text on its own line */
+  margin-top: 20px; /* Add some space above the bold text */
+}
+@media (max-width: 768px) {
+  .explore_blogs {
+    width: 90vw; /* Slightly wider on smaller screens */
+  }
+  .explore_blogs p {
+    padding: 0 15px; /* Add some padding on smaller screens */
+  }
 }
 
 .user_blogs h1 {
@@ -148,18 +171,18 @@ button:hover {
 
 .user_profile .settings {
   display: grid;
-  gap: 18px;
+  /* gap: 0px; */
   background: #2B2B2B;
   border-radius: 20px;
-  width: 200px;
+  width: 150px;
   max-width: 200px;
+  padding: 4px;
   position: absolute;
-  right: 60px;
-  padding: 7px;
-}
-.user_profile .settings:hover {
-  max-width: 185px;
+  right: 10px;
+  top: 100px;
+  overflow: hidden;
   transition: max-height 0.5s ease-in-out;
+  max-height: 50px;
 }
 .user_profile .settings .settings_header {
   padding: 5px 10px;
@@ -175,9 +198,14 @@ button:hover {
 }
 .user_profile .settings .settings_header span {
   font-size: clamp(13px, 2vw, 15px);
+  margin-right: 10px;
 }
 .user_profile .settings .settings_header .icon {
   font-size: 1.5rem;
+}
+.user_profile .settings .settings_header .icon:hover {
+  transform: rotate(180deg);
+  transition: transform 0.5s ease-out;
 }
 .user_profile .settings .underline {
   padding: 0.8px;
@@ -185,6 +213,11 @@ button:hover {
   position: absolute;
   width: 90%;
   bottom: -3px;
+}
+.user_profile .settings .options_container {
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out;
+  max-height: 0;
 }
 .user_profile .settings .options {
   padding: 10px;
@@ -206,6 +239,12 @@ button:hover {
   width: 90%;
   height: 1px;
   background-color: rgba(128, 128, 128, 0.5);
+}
+.user_profile .settings:hover {
+  max-height: 200px;
+}
+.user_profile .settings:hover .options_container {
+  max-height: 200px;
 }
 .user_profile .settings .underline {
   padding: 0.8px;
@@ -230,4 +269,19 @@ button:hover {
   font-weight: 600;
   text-wrap: balance;
   text-align: center;
+}
+
+@media (max-width: 425px) {
+  .settings {
+    border-radius: 50%;
+    width: 40px !important;
+    max-width: none;
+  }
+  .settings_header span {
+    display: none;
+  }
+  .settings_header {
+    padding: 5px;
+    justify-content: center;
+  }
 }/*# sourceMappingURL=index.module.css.map */

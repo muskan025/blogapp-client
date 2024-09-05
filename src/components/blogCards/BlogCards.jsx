@@ -1,34 +1,30 @@
 /* eslint-disable react/prop-types */
+import Masonry from "react-masonry-css"
 import BlogCard from "../blogCard/BlogCard"
 import styles from "./styles/styles.module.css"
   
-const BlogCards = ({filter="food", data,comp}) => {
- 
-  // let filteredBlogs=[]
-  // console.log("before if",filter)
+const BlogCards = ({data,comp}) => {
 
-  // if(filter){
-  //   console.log("after if",filter)
-  //     filteredBlogs = blogs.filter((blog)=> ( blog.niche === filter))
-  // }
-  // // else{
-  // //   filteredBlogs = [...blogs]
-  // // }
-
-  // if(!filteredBlogs){
-  //   console.log("no blogs")
-  //   return <h1>No results found</h1>
-  // }
-
+  const breakpointColumnsObj = {
+    default: 3,
+    1100: 2,
+    700: 1
+  };
+  
   return (
 
-    <section className={styles.card_grid}>
+    // <section className={styles.card_grid}>
+    <Masonry
+    breakpointCols={breakpointColumnsObj}
+    className={styles.my_masonry_grid}
+    columnClassName={styles.my_masonry_grid_column}
+  >
 
       {
         data?.length>0 && data?.map((blog) => 
           {
             const{_id,title,thumbnail,readTime,textBody,likesCount,userId,createdAt} = blog
-
+           
             const createdAtDate = new Date(createdAt);
             const dateNum = createdAtDate.getDate();
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -39,11 +35,12 @@ const BlogCards = ({filter="food", data,comp}) => {
             const profileImage = `http://localhost:8000/${userId.profileImg}`
             const blogData = {...blog, date,thumbnail:image}
  
-       return <BlogCard key = {_id} user={userId} userId={userId._id} profileImg={profileImage} blogId={_id} blogImage = {image} niche ="productivity" blogTitle = { title } textBody = { textBody } username = { userId.username } date = {date} readTime={readTime} likes={likesCount} data={blogData} comp={comp}/>
+       return <BlogCard key = {_id} user={userId} profileImg={profileImage} blogId={_id} blogImage = {image} niche ={userId.niche} blogTitle = { title } textBody = { textBody } username = { userId.username } date = {date} readTime={readTime} likes={likesCount} data={blogData} comp={comp}/>
           })
       }
  
-    </section>
+    {/* </section> */}
+    </Masonry>
   )
 }
 

@@ -3,7 +3,6 @@
 /* spacers */
 /* Breakpoints */
 .navbar {
-  padding: clamp(16px, 2.5vw, 24px);
   padding-inline: clamp(24px, 4vw, 48px);
   display: flex;
   justify-content: space-between;

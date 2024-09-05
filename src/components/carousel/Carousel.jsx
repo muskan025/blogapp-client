@@ -75,7 +75,7 @@ const Carousel = ({data}) => {
                             <div className={styles.arrow_text_container}>
                                 <span className={styles.icon} onClick={() => handleManualSliding('prev')}><PiCaretCircleLeftLight /></span>
                                 <div className={styles.text_container}>
-                                    <p className={styles.niche}>{userId.niche}</p>
+                                  <Link to={`/explore-blogs`} state={userId.niche}><p className={styles.niche}>{userId.niche}</p></Link>
                                     <Link to={`/blog/${_id}`} state={blogData} className={styles.title}>
                                         <h1 >{title}</h1></Link>
                                     <UserDetails userId={userId._id} profileImg={profileImage} username={userId.username} date={date} readTime={readTime} comp="carousel" user={userId}/>

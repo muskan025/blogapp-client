@@ -26,20 +26,18 @@ const Login = () => {
     try {
       const response = await login(formData).unwrap();
       const user = response.data
-      if (response.status === 200) {
+       if (response.status === 200) {
         dispatch(setUser(response.data))
         const username = response.data.username
-        toast.success("Login successful!");
         resetForm()
-        navigate(`/profile/:${username}`, {user});
+        navigate(`/profile/${username}`, {state:user});
       }
       else {
         toast.error(response.message || "Login failed");
       }
 
     } catch (error) {
-      console.log(error)
-       toast.error("Login failed");
+        toast.error("Login failed");
     }
   }
 

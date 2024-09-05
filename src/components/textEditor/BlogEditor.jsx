@@ -26,20 +26,6 @@ const [editorContent, setEditorContent] = useState(state?.textBody || "");
   const [upDateBlog, { isUpdateLoading }] = useUpdateBlogMutation()
   const [createBlog, { isLoading }] = useCreateBlogMutation()
   const [uploadImg] = useUploadImgMutation()
-  // const modules = {
-  //   toolbar: [
-  //     [{ font: [] }],
-  //     [{ header: [1, 2, 3, 4, 5, 6, false] }],
-  //     ["bold", "italic", "underline", "strike"],
-  //     [{ color: [] }, { background: [] }],
-  //     [{ script: "sub" }, { script: "super" }],
-  //     ["blockquote", "code-block"],
-  //     [{ list: "ordered" }, { list: "bullet" }],
-  //     [{ indent: "-1" }, { indent: "+1" }, { align: [] }],
-  //     ["link", "image", "video"],
-  //     ["clean"],
-  //   ]
-  // }
   const editorRef = useRef(null);
 
 
@@ -66,13 +52,17 @@ const [editorContent, setEditorContent] = useState(state?.textBody || "");
    const modules = useMemo(() => ({
     toolbar: {
       container: [
-        [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-        [{ size: [] }],
-        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
-        ['link', 'image', 'video'],
-        ['clean'],
-        [{ 'align': [] }],
+        [{ font: [] }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        [{ color: [] }, { background: [] }],
+        ["bold", "italic", "underline", "strike"],
+        [{ script:  "sub" }, { script:  "super" }],
+        ["blockquote", "code-block"],
+        [{ list:  "ordered" }, { list:  "bullet" }],
+        [{ indent:  "-1" }, { indent:  "+1" }, { align: [] }],
+        ["link", "image", "video"],
+        ["clean"],
+        
       ],
       handlers: {
         image: imageHandler,
@@ -108,7 +98,6 @@ const [editorContent, setEditorContent] = useState(state?.textBody || "");
 
     e.preventDefault()
 
-    console.log("b4 publish")
     const formData = new FormData();
     
     const unchangedThumbnail = state?.thumbnail && !thumbnail.file
@@ -124,8 +113,7 @@ const [editorContent, setEditorContent] = useState(state?.textBody || "");
       }
       formData.append('file', thumbnail.file,thumbnail.file.name);
   
-       console.log("publish:", formData.get('file'))
-    }
+     }
       
     try {
       const response = !unchangedThumbnail && await uploadImg(formData).unwrap()
@@ -156,7 +144,7 @@ const [editorContent, setEditorContent] = useState(state?.textBody || "");
 
       }
     catch (error) {
-      console.error("Something went wrong", error)
+       toast.error("Something went wrong, please try again later")
     }
   
   }
@@ -195,7 +183,7 @@ const [editorContent, setEditorContent] = useState(state?.textBody || "");
           </div>
         </form>
 
-        <div className={styles.content}>
+        <div className={`${styles.content} ${styles.quill_wrapper}`}>
           <ReactQuill
           ref={editorRef}
            modules={modules}
@@ -203,7 +191,9 @@ const [editorContent, setEditorContent] = useState(state?.textBody || "");
             placeholder="Content goes here..."
             onChange={setEditorContent}
             value={editorContent}
-            formats={['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'indent', 'link', 'image', 'video', 'align']}
+            formats={['font', 'header', 'bold', 'italic', 'underline', 'strike', 'color', 'background',
+                    'script', 'blockquote', 'code-block', 'list', 'bullet', 'indent', 'align',
+                    'link', 'image', 'video']}
           />
         </div>
 

@@ -34,8 +34,7 @@ const scrollToTop = (e) => {
     <div className={styles.footer}>
       <div className={styles.fMain}>
         <Link to="/about-us">About us</Link>
-        <Link to="">Contact us</Link>
-        <Link to="">Support</Link>
+        
       </div>
       <div className={styles.fSocialLinks}>
         <div className={styles.links}>
@@ -56,7 +55,7 @@ const scrollToTop = (e) => {
         </div>
       </div>
       <div className={styles.fCopyright}>
-        <p>&copy; Copyright 2024 AssiaGroupe, All Rights Reserved.</p>
+        <p>&copy; Copyright 2024  LiveUp, All Rights Reserved.</p>
         {
         showBackToTop && <div className={styles.back_to_top}><a href="#" onClick={scrollToTop}>
         <IoMdArrowUp />

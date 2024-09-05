@@ -239,18 +239,35 @@ justify-content: space-between;
 
 .single_blog{
   margin-inline: auto;
+  padding-inline: 20px;
   width: 100%;
   display: flex;
    justify-content: space-around;
    gap:40px;
+
+   @media (max-width:768px){
+    &{
+      flex-wrap: wrap;
+    }
+   }
  }
 
 .blog_excerpt_container{
   margin-top: 20px;
+  // overflow: hidden;
+  word-wrap: break-word;
+} 
+
+.blog_content pre{
+ text-wrap: pretty;
+ background: #00000079;
+ padding:20px;
+ border-radius: 20px;
 }
 
 .about_us{
   margin-inline: auto;
+  padding-inline: 20px;
   max-width: 920px;
   .quote_block{
     background-color: $dark-theme;
@@ -272,6 +289,7 @@ justify-content: space-between;
     i{
       margin-top: 40px;
     }
+
      
   }
 
@@ -454,15 +472,25 @@ gap:50px;
 }
 } 
 
-@media (max-width:768x) {
+@media (max-width:768px) {
   .single_blog{
     flex-direction: column;
+  }
+   .excerpt .highlights li{
+    flex-direction: column;
+  }
+  
+  .excerpt h4{
+    text-wrap: nowrap;
   }
 }
 
 @media (max-width:425px) {
   .carousel{
     height: 50vh;
+  }
+  .excerpt ul li svg{
+    min-width: 20px;  
   }
 }
 

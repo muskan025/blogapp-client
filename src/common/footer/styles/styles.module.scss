@@ -66,5 +66,9 @@ right: 30px;
 }
   }
 
-   
+  @media (max-width:768px) {
+    .back_to_top a{
+      bottom: 80px;
+    }
+  }
  

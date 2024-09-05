@@ -7,6 +7,7 @@
   flex-direction: column;
   margin: 0 auto;
   position: relative;
+  padding: 0 20px;
 }
 .editor_container .popup_overlay {
   position: absolute;
@@ -25,6 +26,7 @@
 }
 .editor_container .publish {
   align-self: flex-end;
+  margin-bottom: 30px;
 }
 .editor_container .text_editor {
   width: 100%;

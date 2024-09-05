@@ -12,6 +12,7 @@ const Home = () => {
   const {data:allBlogs, isLoading:blogLoading, error: blogError} = useGetAllBlogsQuery()
   const dispatch = useDispatch()
 
+  console.log(allBlogs)
   useEffect(()=>{
     if (allBlogs) {
       dispatch(setAllBlogs(allBlogs));
@@ -22,14 +23,12 @@ const Home = () => {
     return <p>Loading...</p>;
   }
 
-  console.log("allBlogs",allBlogs)
-  if (blogError) {
+   if (blogError) {
     toast.error("Error fetching blogs");
   }
 
   const carouselData = allBlogs?.slice(0,5)
-  console.log(carouselData)
-  return (
+   return (
     <main className={styles.home}>
       <Carousel data={carouselData} />
       <BlogCards data={allBlogs} comp="home"/>

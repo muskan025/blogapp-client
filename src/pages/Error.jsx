@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import { Link } from "react-router-dom"
 import error from "../assets/error.png"
 import Header from "../common/header/Header"
 import Footer from "../common/footer/Footer"
@@ -13,7 +13,7 @@ const Error = () => {
      <div className={styles.error_page}>
      <img src={error} alt=""  />
      <p>Oops! This page can’t be found</p>
-     <Button name="Go Back Home"><NavLink to="/">Go Back Home</NavLink></Button>
+     <Link to="/"><Button name="Go Back Home">Go Back Home</Button></Link>
      </div>
     </main>
     <Footer/>

@@ -8,7 +8,8 @@ import { useForm } from "../../hooks/useForm";
 import { toast } from 'react-toastify'
 import { validateBio, validateImage, validateNiche } from '../../utils/authValidation';
 import { useUpdateProfileMutation, useUploadImgMutation } from '../../reduxToolkit/slices/apiSlice';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../../reduxToolkit/slices/userSlice';
 
 // const socialhandles = [
 // "facebook",
@@ -16,127 +17,121 @@ import { useSelector } from 'react-redux';
 // "x",
 // "youtube"
 // ]
-const EditProfile = ({onClose}) => {
+const EditProfile = ({ onClose }) => {
 
-const {user} = useSelector((state)=>state.userData)
-  const name = user?.name
-  const username = user?.username
-  const bio = user?.bio
-  const niche = user?.niche
-  const initialState = {
-    name:name,
-    username:username,
+  const { author } = useSelector((state) => state.userData)
+
+  const name = author?.name
+  const username = author?.username
+    const bio =author?.bio
+    const niche = author?.niche
+
+   const initialState = {
+    name: name,
+    username: username,
     bio: bio,
     niche: niche
   };
+  const dispatch = useDispatch()
 
-  const { formData, handleChange, resetForm, errors, setErrors, image, handleImage  } = useForm(initialState);
+  const { formData, handleChange, resetForm, errors, setErrors, image, handleImage } = useForm(initialState);
 
 
-  const [uploadImg,{isImgLoading}] = useUploadImgMutation()
-  const [updateProfile,{isLoading}] = useUpdateProfileMutation()
+  const [uploadImg, { isImgLoading }] = useUploadImgMutation()
+  const [updateProfile, { isLoading }] = useUpdateProfileMutation()
 
-    const [isSocialMediaHandles,setIsSocialMediaHandles] = useState(false)
+  const [isSocialMediaHandles, setIsSocialMediaHandles] = useState(false)
 
-    function validateForm() {
-      let newErrors = {};
-  
-      const isImageValid = validateImage(image?.file).error;
-      const isBioValid = validateBio(formData?.bio).error;
-      const isNicheValid = validateNiche(formData?.niche).error;
-      const isUsernameValid = validateNiche(formData?.username).error;
+  function validateForm() {
+    let newErrors = {};
 
-      if (isImageValid) newErrors.profileImg = isImageValid;
-      if (isBioValid) newErrors.bio = isBioValid;
-      if (isNicheValid) newErrors.niche = isNicheValid;
-      if (isUsernameValid) newErrors.username = isUsernameValid;
-  
-      setErrors(newErrors);
-  
-      return Object.keys(newErrors).length === 0;
-    }
+    const isImageValid = image && validateImage(image.file).error;
+    const isBioValid = validateBio(formData?.bio).error;
+    const isNicheValid = validateNiche(formData?.niche).error;
+    const isUsernameValid = validateNiche(formData?.username).error;
 
-    async function handleSubmit(e){
-        e.preventDefault()
+    if (isImageValid) newErrors.profileImg = isImageValid;
+    if (isBioValid) newErrors.bio = isBioValid;
+    if (isNicheValid) newErrors.niche = isNicheValid;
+    if (isUsernameValid) newErrors.username = isUsernameValid;
 
-        if(validateForm()){
+    setErrors(newErrors);
 
-          const imgData = new FormData()
-          imgData.append('file', image.file,image.file.name);
-  
-       console.log("edit profile img:", imgData.get('file'))
+    return Object.keys(newErrors).length === 0;
+  }
 
-          try {
+  async function handleSubmit(e) {
+    e.preventDefault()
 
-            const imgResponse = await uploadImg(imgData).unwrap()
+    if (validateForm()) {
 
-            if(imgResponse.status === 200){
+      try {
 
-              console.log("image uploaded")
-              const profileData = new FormData()
+        let imgResponse
+       if(image){
+        const imgData = new FormData()
+        imgData.append('file', image.file, image.file.name);
+        imgResponse = await uploadImg(imgData).unwrap()
+       }
 
-              profileData.append('bio',formData.bio)
-              profileData.append('niche',formData.niche)
-              profileData.append('name',formData.name)
-              profileData.append('username',formData.username)
-              profileData.append('profileImg',imgResponse.url)
- 
-              const profileResponse = await updateProfile({profileData,username}).unwrap()
+        if ( !image || imgResponse.status === 200) {
 
-              console.log("profile respo",profileResponse)
-            if(profileResponse.status === 200){
-              console.log("profile uploaded")
-              toast.success(profileResponse.message)
+          const profileData = new FormData()
 
-              resetForm()
-              onClose()
-            }
-            else{
-              toast.error(profileResponse.message)
-            }
+          profileData.append('bio', formData.bio)
+          profileData.append('niche', formData.niche)
+          profileData.append('name', formData.name)
+          profileData.append('username', formData.username)
+          image && profileData.append('profileImg', imgResponse.url)
+
+          const profileResponse = await updateProfile({ profileData, username }).unwrap()
+
+          if (profileResponse.status === 200) {
+             dispatch(setUser(profileResponse.data))
+            toast.success(profileResponse.message)
+
+            resetForm()
+            onClose()
           }
-          else{
-            toast.error(imgResponse.message)
-          }
-          } catch (error) {
-            toast.error("Something went wrong, please try again")
+          else {
+            toast.error(profileResponse.message)
           }
         }
-        else{
-          toast.error("Please fill in the details")
+        else {
+          toast.error(imgResponse.message)
         }
+      } catch (error) {
+        toast.error("Something went wrong, please try again")
+      }
     }
-
-    useEffect(()=>{
-
-      console.log("user: ",user)
-      console.log("profile image",image)
-      console.log("profile data",formData)
-    },[image,formData])
+    else {
+      toast.error("Please fill in the details")
+    }
+  }
 
   return (
     <form className={styles.form_container} >
-       
-        <span className={styles.close} onClick={onClose}><BsX title="Close"/></span>
-        { !isSocialMediaHandles &&
+
+      <span className={styles.close} onClick={onClose}><BsX title="Close" /></span>
+      {!isSocialMediaHandles &&
         <div>
-      <FileField name="profileImage" placeholder="Upload Picture" onChange={handleImage}/>
-      <span>{errors.profileImg}</span>
+          <FileField name="profileImage" placeholder="Upload Picture" onChange={handleImage} />
+          <span>{errors.profileImg}</span>
 
-      <textarea type="text" name="bio" placeholder="Bio" onChange={handleChange} value={formData.bio}></textarea>
-      {/* <span>{errors.bio}</span> */}
+          <textarea type="text" name="bio" placeholder="Bio" onChange={handleChange} value={formData.bio}></textarea>
+          {/* <span>{errors.bio}</span> */}
 
-      <InputField type="text" name="niche" placeholder="Blog Niche*" onChange={handleChange} value={formData.niche}/>
-      {/* <span>{errors.niche}</span> */}
+          <InputField type="text" name="niche" placeholder="Blog Niche*" onChange={handleChange} value={formData.niche} />
+          {/* <span>{errors.niche}</span> */}
 
-      <InputField type="text" name="name" placeholder="Name" onChange={handleChange} value={formData.name}/>
-      {/* <span>{errors.name}</span> */}
+          <InputField type="text" name="name" placeholder="Name" onChange={handleChange} value={formData.name} />
+          {/* <span>{errors.name}</span> */}
 
-      <InputField type="text" name="username" placeholder="Username" onChange={handleChange} value={formData.username}/>
-      {/* <span>{errors.username}</span> */}
-      </div>
+          <InputField type="text" name="username" placeholder="Username" onChange={handleChange} value={formData.username} />
+          {/* <span>{errors.username}</span> */}
+        </div>
       }
-        {/* {isSocialMediaHandles && <ul>
+      {/* {isSocialMediaHandles && <ul>
            {
              socialhandles.map((handle)=>(
                 <li key={handle}>
@@ -146,7 +141,7 @@ const {user} = useSelector((state)=>state.userData)
            }
         </ul>}
         {!isSocialMediaHandles && <button onClick={()=>setIsSocialMediaHandles(true)} className={styles.add_media}>Add social media handles</button>} */}
-      <button onClick={handleSubmit}>{isLoading ? 'Loading...': 'Update Profile'}</button>
+      <button onClick={handleSubmit}>{isLoading ? 'Loading...' : 'Update Profile'}</button>
     </form>
   )
 }

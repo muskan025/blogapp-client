@@ -26,7 +26,7 @@ export const AboutExcerpt = () => {
 
       <div className={styles.excerpt}>
         <h3>What We Offer</h3>
-        <ul>
+        <ul className={styles.highlights}>
           <li>
           <h4>Diverse Content:</h4> <p>Explore a wide range of topics to broaden your horizons.</p>
           </li>
@@ -48,7 +48,7 @@ export const AboutExcerpt = () => {
 
       <div className={styles.excerpt}>
         <h3>Why LiveUp?</h3>
-        <ul>
+        <ul className={styles.highlights}>
           <li>
           <h4>Turn Downtime into &lsquo;You&rsquo; Time:</h4> <p>
           Make the most of those in-between moments in your day.

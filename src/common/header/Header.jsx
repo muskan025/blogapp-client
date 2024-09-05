@@ -1,13 +1,30 @@
-import { NavLink, Link } from "react-router-dom"
+import { NavLink, Link, useLocation } from "react-router-dom"
 import styles from "./styles/styles.module.css"
 import { useSelector } from "react-redux"
 import { randomProfileBg } from "../../components/profileCard/ProfileCard"
+import { toast } from "react-toastify"
 
 const Header = () => {
-  const { user, isAuth } = useSelector((state) => state.userData)
-  const username = user?.username
-  const profileImage = `http://localhost:8000/${user?.profileImg}`
+  const { author,profileImg,isAuth} = useSelector((state) => state.userData)
+  const username = author?.username
+  const profileImage = `http://localhost:8000/${profileImg}`
+  const location = useLocation()
+ 
+  function checkisAuth(e){
+    if(!isAuth){
+      e.preventDefault()
+      toast.info('Session expired, please login')
+    }
+  }
 
+  const getLinkState = () => {
+    if (isAuth) {
+       return author 
+    } else {
+    
+       return location.state
+    }
+  }
 
   return (
     <header className={styles.header}>
@@ -39,14 +56,14 @@ const Header = () => {
           }
 
         </div>
-        {
-          isAuth && <div className={styles.profile_img}>
-            <Link to={`/profile/${username}`} state={user}>
-              {user?.profileImg ? <img src={profileImage} alt="Profile" /> :
-                <div className={styles.defaultProfile} style={{ "background": `linear-gradient(135deg, ${randomProfileBg()[0]} 0%, ${randomProfileBg()[1]} 100%)` }}>{user?.name?.charAt(0).toUpperCase()}</div>}
+       
+        <div className={styles.profile_img} onClick={(e)=>checkisAuth(e)}>
+            <Link to={isAuth ? `/profile/${username}`: location.pathname} state={getLinkState()}>
+               <img src={profileImage} alt="Profile" /> :
+                <div className={styles.defaultProfile} style={{ "background": `linear-gradient(135deg, ${randomProfileBg()[0]} 0%, ${randomProfileBg()[1]} 100%)` }}>{author?.name?.charAt(0).toUpperCase()}</div>
             </Link>
           </div>
-        }
+          
       </nav>
     </header>
   )

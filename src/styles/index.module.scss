@@ -1,12 +1,6 @@
 @import "./var" ;
 @import "./mixin" ;
   
-
-  // font-synthesis: none;
-  // text-rendering: optimizeLegibility;
-  // -webkit-font-smoothing: antialiased;
-  // -moz-osx-font-smoothing: grayscale;
-
   
   *,*::after,*::before{
     margin: 0;
@@ -55,8 +49,6 @@
 
   main{
     padding-block: 145px 60px;
-    padding-inline: 60px;
-
   }
 .home{
     padding: 0 0 60px 0;
@@ -139,21 +131,63 @@ a{
 }
 }
 
-.explore_blogs{
+// .explore_blogs{
 
-  .searchbar{
+//   .searchbar{
+//     padding: 20px 20px 0 20px;
+//     border-radius: 20px;
+//     background: #2B2B2B;
+//     width: 81vw;
+//     margin-inline: auto;
+//     margin-bottom: 20px;
+// }
+  
+// .niche_name{
+//     color: $primary-accent;
+// }
+
+// }
+.explore_blogs {
+  width: 81vw;
+  margin-inline: auto;
+  text-align: center; /* Center all text content */
+
+  .searchbar {
     padding: 20px 20px 0 20px;
     border-radius: 20px;
     background: #2B2B2B;
-    width: 81vw;
-    margin-inline: auto;
-    margin-bottom: 20px;
-}
+    margin-bottom: 40px; /* Increased margin for better spacing */
+  }
   
-.niche_name{
-    color: $primary-accent;
-}
-
+   .niche_name {
+    color: #F67280;
+  }
+  
+    h1 {
+    margin-bottom: 20px; /* Add space below the heading */
+  }
+  
+    p {
+    max-width: 800px; /* Limit the width for better readability */
+    margin: 0 auto 40px; /* Center the paragraph and add bottom margin */
+    line-height: 1.6; /* Improve line spacing for readability */
+  }
+  
+  b {
+    display: block; /* Put the bold text on its own line */
+    margin-top: 20px; /* Add some space above the bold text */
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    & {
+      width: 90vw; /* Slightly wider on smaller screens */
+    }
+    
+      p {
+       padding: 0 15px; /* Add some padding on smaller screens */
+    }
+  }
 }
 
 .user_blogs{
@@ -166,21 +200,20 @@ a{
 .user_profile{
   
   .settings{
-    display: grid;
-    gap: 18px;
-    background:  $bg-color;
+    display: grid; 
+    /* gap: 0px; */
+    background: #2B2B2B;
     border-radius: 20px;
-    width: 200px;
-    max-width: 200px;
+    width: 150px;
+     max-width: 200px; 
+    padding: 4px;
     position: absolute;
-    right: 60px;
-    padding: 7px;
-   
-    &:hover{
-      max-width: 185px;
-      transition: max-height 0.5s ease-in-out;
-    }
-    
+    right: 10px;
+    top: 100px;
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out;
+    max-height: 50px;
+      
      .settings_header{
       padding: 5px 10px;
       background:  $bg-color;
@@ -195,9 +228,15 @@ a{
 
       span{
         font-size: $text-s;
+        margin-right: 10px;
        }
       .icon{
         font-size: 1.5rem;
+        &:hover{
+          transform: rotate(180deg);
+          transition: transform 0.5s ease-out;
+        }
+        
       }
     }
 
@@ -209,12 +248,17 @@ a{
       bottom: -3px;
     }
 
+    .options_container{
+      overflow: hidden;
+      transition: max-height 0.5s ease-in-out;
+      max-height: 0;
+    }
     .options{
     padding: 10px;
     border-radius: 10px;
     position: relative;
     cursor: pointer;
-
+ 
     &:hover{
       opacity: 0.5;
     }
@@ -235,6 +279,14 @@ a{
        }
     }
   }
+
+  &:hover{
+    max-height: 200px;
+  }
+  &:hover .options_container{
+     max-height: 200px;
+  }
+ 
   .underline{
     padding: 0.8px;
     background-color: gray;
@@ -263,4 +315,23 @@ a{
     text-wrap: balance;
     text-align: center;
   }
+}
+
+@media (max-width: 425px){
+ 
+  .settings{
+    border-radius: 50%;
+    width: 40px !important;
+     max-width: none;
+    }
+
+  .settings_header span{
+    display: none;
+  }
+  .settings_header {
+    padding: 5px;
+    justify-content: center;
+    align
+  }
+ 
 }

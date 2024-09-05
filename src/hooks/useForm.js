@@ -8,8 +8,7 @@ export const useForm = (initialState) => {
 
     function handleChange(e) {
 
-        console.log("inside change hook");
-        
+         
         setErrors(initialState)
         const { name, value, files, type } = e.target
         setFormData((prev) => ({

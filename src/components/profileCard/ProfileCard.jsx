@@ -1,84 +1,165 @@
 /* eslint-disable react/prop-types */
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
-import defaultProfile from '../../assets/profile.png'
 import styles from "./styles/styles.module.css";
 import { FaXTwitter } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FollowListModal from "../followListModal/FollowListModal";
 import Modal from "../modal/Modal";
 import EditProfile from "../editProfile/EditProfile";
 import { useSelector } from "react-redux";
+import { useFollowMutation, useGetUserDataMutation, useUnfollowMutation } from "../../reduxToolkit/slices/apiSlice";
+import { toast } from "react-toastify";
 
-const ProfileCard = ({ articleCount = true, user}) => {
+const ProfileCard = ({ articleCount = true, user, blogsCount,comp }) => {
 
-  console.log(user)
-    const [showFollowingModal,setShowFollowingModal] = useState(false)
-    const [showFollowerModal,setShowFollowerModal] = useState(false)
-    const [editProfile,setEditProfile] = useState(false)
-  const {myBlogs} = useSelector((state)=>state.blogData)
-    const blogsCount = myBlogs.length
-    const {author,isAuth} = useSelector((state)=>state.userData)
-    const isOwnProfile =  author?.username === user?.username;
-    console.log(author)
-    console.log(user?.username,isOwnProfile)
-    
-    const {username,profileImg,niche,bio} = user
-     const profileImage = `http://localhost:8000/${profileImg}`
+  const [showFollowingModal, setShowFollowingModal] = useState(false)
+  const [showFollowerModal, setShowFollowerModal] = useState(false)
+  const [editProfile, setEditProfile] = useState(false)
+  const { author } = useSelector((state) => state.userData)
+  const isOwnProfile = author?.username === user?.username;
+  
+  const { username, profileImg, niche, bio, _id,} = user
+  const userId =  _id || author?.userId
+   const profileImage = `http://localhost:8000/${profileImg}`
+  const [follow, { isFollowLoading }] = useFollowMutation()
+  const [unfollow, { isunfollowLoading }] = useUnfollowMutation()
+  const [isFollowing,setIsFollowing] = useState(false)
+  const  [getUserData,{isLoading:fetchedUserDetailsLoading,isError:fetchedUserDetailsError}] =useGetUserDataMutation()
+  const [followCounts,setFollowCounts] = useState({followingCount:0,
+    followerCount:0
+  })
 
-    function onCloseFollowing(){ 
-      setShowFollowingModal(false)
+  function onCloseFollowing() {
+    setShowFollowingModal(false)
+  }
+
+  function onCloseFollower() {
+    setShowFollowerModal(false)
+  }
+
+  async function fetchUserDetails() {
+
+    try {
+      const response = await getUserData(userId).unwrap()
+
+       if (response.status === 200) {
+        const {followingsCount,followersCount} = response.data
+        setFollowCounts({followingCount:followingsCount,followerCount:followersCount})
+       }
+      else {
+        toast.error(response.message)
+      }
     }
-    function onCloseFollower(){
-      setShowFollowerModal(false)
+    catch (error) {
+      console.log(error)
+      toast.error('Something went wrong,please try again')
     }
+  }
 
-    function handleEditProfile(){
-      setEditProfile(true)
+  async function handleFollow() {
+
+    try {
+      setFollowCounts(prev => ({
+        ...prev,
+        followerCount: prev.followerCount + 1
+      }));
+      const response = await follow(_id, username,name, profileImg).unwrap()
+       if (response.status === 200) {
+        
+        toast.success(`You started following ${user.username}`)
+        setIsFollowing(true)
+      }
+      else{
+        setFollowCounts(prev => ({
+          ...prev,
+          followerCount: prev.followerCount - 1
+        }));
+        toast.error(response.message)
+      }
     }
+    catch (error) {
+      console.log(error)
+      toast.error('Something went wrong, please try again')
+     }
+  }
 
-    function closeEditProfile(){
-      setEditProfile(false)
+  async function handleUnfollow() {
+
+    try {
+      setFollowCounts(prev => ({
+        ...prev,
+        followerCount: prev.followerCount - 1
+      }));
+      const response = await unfollow(_id).unwrap()
+
+      if (response.status === 200) {
+        toast.success(`You unfollowed ${user.username}`)
+        setIsFollowing(false)
+      }
     }
+    catch (error) {
+      setFollowCounts(prev => ({
+        ...prev,
+        followerCount: prev.followerCount + 1
+      }));
+       toast.error(error)
+    }
+  }
 
-   return (
+  function handleEditProfile() {
+    setEditProfile(true)
+  }
+
+  function closeEditProfile() {
+    setEditProfile(false)
+  }
+
+  useEffect(()=>{
+    if(comp==='profile'){
+      fetchUserDetails()
+    }
+  },[userId])
+
+  return (
     <div className={styles.user_details_container}>
 
-       <Link to={`/profile/${username}`} >
-        { user.profileImg ?
-          <img src={profileImage} alt="Profile Image" className={styles.profileImg} />:
-          <p className={styles.defaultImg} 
-          style={{ "background": `linear-gradient(135deg, ${randomProfileBg()[0]} 0%, ${randomProfileBg()[1]} 100%)`}}>
+      <Link to={`/profile/${username}`} state={user} >
+        {user.profileImg ?
+          <img src={profileImage} alt="Profile Image" className={styles.profileImg} /> :
+          <p className={styles.defaultImg}
+            style={{ "background": `linear-gradient(135deg, ${randomProfileBg()[0]} 0%, ${randomProfileBg()[1]} 100%)` }}>
             {user?.name?.charAt(0).toUpperCase()}
           </p>
-          }
+        }
       </Link>
       <div className={styles.user_details}>
         <p className={styles.name}>{username}</p>
         {articleCount && <div className={styles.article_followlist_container}>
-        <span>{blogsCount} Blogs</span>
-        <span className={styles.followList} onClick={()=>setShowFollowingModal(true)}>0 Following</span>
-        <span className={styles.followList} onClick={()=>setShowFollowerModal(true)}>0 Followers</span>
+          <span>{blogsCount} Blogs</span>
+          <span className={styles.followList} onClick={() => setShowFollowingModal(true)}>{followCounts.followingCount } Followings</span>
+          <span className={styles.followList} onClick={() => setShowFollowerModal(true)}>{followCounts.followerCount} Followers</span>
 
-        <Modal isOpen={showFollowingModal} onClose={onCloseFollowing}>
-      <FollowListModal onClose={onCloseFollowing} isOpen={showFollowingModal} heading='Following' name="following"/>
-    </Modal>
-        <Modal isOpen={showFollowerModal} onClose={onCloseFollower}>
-      <FollowListModal onClose={onCloseFollower} isOpen={showFollowerModal} heading='Followers' name="follower"/>
-    </Modal>
+          <Modal isOpen={showFollowingModal} onClose={onCloseFollowing}>
+            <FollowListModal onClose={onCloseFollowing} isOpen={showFollowingModal} list='Followings' userId={isOwnProfile ? author.userId :userId} setIsFollowing={setIsFollowing} setShowModal={setShowFollowingModal} setFollowCounts={setFollowCounts}/>
+          </Modal>
+          <Modal isOpen={showFollowerModal} onClose={onCloseFollower}>
+            <FollowListModal onClose={onCloseFollower} isOpen={showFollowerModal} list='Followers' userId={isOwnProfile ? author.userId :userId} setIsFollowing={setIsFollowing} setShowModal={setShowFollowerModal} setFollowCounts={setFollowCounts}/>
+          </Modal>
 
         </div>
         }
         <div className={styles.profile_btns}>
-     { !isOwnProfile && <span className={styles.niche}>Follow</span> }  {/* raise toast on follow */}
-        <span className={styles.niche}>{!niche ? 'Niche' : niche}</span>
-       { isOwnProfile && <span className={styles.niche} onClick={handleEditProfile}>Edit Profile</span>}
+          {!isOwnProfile && <span className={styles.niche} onClick={!isFollowing ? handleFollow : handleUnfollow}>{!isFollowing ? 'Follow' : 
+            'Unfollow'}</span>}
+          <span className={styles.niche}>{!niche ? 'Niche' : niche}</span>
+          {isOwnProfile && <span className={styles.niche} onClick={handleEditProfile}>Edit Profile</span>}
 
-        <Modal isOpen={editProfile} onClose={closeEditProfile}>
-          <EditProfile isOpen={editProfile} onClose={closeEditProfile}/>
-        </Modal>
-        
-        { isOwnProfile && niche ? (
+          <Modal isOpen={editProfile} onClose={closeEditProfile}>
+            <EditProfile isOpen={editProfile} onClose={closeEditProfile} />
+          </Modal>
+
+          {isOwnProfile && niche ? (
             <Link to={`/create-blog/${username}`}>
               <span className={styles.niche}>Create Blog</span>
             </Link>
@@ -87,7 +168,7 @@ const ProfileCard = ({ articleCount = true, user}) => {
               Create Blog
             </span>
           )}
-        
+
         </div>
         <p className={styles.bio}>{bio}</p>
 
@@ -119,22 +200,24 @@ const ProfileCard = ({ articleCount = true, user}) => {
 };
 
 export function randomProfileBg() {
-    
-   function randomClr() {
-      const letters = '0123456789ABCDEF';
-      let color = '#';
-      
-       for (let i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
-      }
-      
-      return color;
+
+  function randomClr() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+
+    return color;
   }
 
   const randomBg = [randomClr(), randomClr()];
-  
-  console.log("randomBg",randomBg)
+
   return randomBg;
 }
 
 export default ProfileCard;
+
+
+ 

@@ -9,7 +9,7 @@
   transform: translate(-50%, -50%);
   background-color: #2B2B2B;
   border-radius: 20px;
-  width: 100%;
+  width: 80%;
   max-width: 385px;
   padding: 10px;
   font-size: clamp(11px, 1.8vw, 13px);
