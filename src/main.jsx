@@ -1,74 +1,78 @@
- import { createRoot } from 'react-dom/client'
- import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { createRoot } from 'react-dom/client'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import Error from './pages/Error.jsx'
-import Home from './pages/Home.jsx'
-import ExploreBlogs from './pages/ExploreBlogs.jsx'
-import SignUp from './pages/SignUp.jsx'
-import Login from './pages/Login.jsx'
-import AboutUs from './pages/AboutUs.jsx'
-import './styles/index.module.css'
-import EditProfile from './components/editProfile/EditProfile.jsx'
-import SingleBlog from './pages/SingleBlog.jsx'
-import ViewerProfile from './pages/ViewerProfile.jsx'
-import CreateBlog from './pages/CreateBlog.jsx'
 import { store } from './reduxToolkit/store.js'
-import {Provider} from 'react-redux'
+import { Provider } from 'react-redux'
 import PrivateRoute from './components/PrivateRoute.jsx'
-import { PersistGate } from 'redux-persist/integration/react'   
+import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
+import { SkeletonTheme } from 'react-loading-skeleton'
+import { lazy, Suspense } from 'react'
+import SkeletonLoader from './components/Skeletons/SkeletonLoader.jsx'
+ 
+function wait() { 
+  return new Promise((res) => {
+    setTimeout(() => { res() }, 8000)
+  })
+}
+
+const Home = lazy(() => import('./pages/Home.jsx'));
+const AboutUs = lazy(() => import('./pages/AboutUs.jsx'));
+const ExploreBlogs = lazy(() => import('./pages/ExploreBlogs.jsx'));
+const CreateBlog = lazy(() => import('./pages/CreateBlog.jsx'));
+const SingleBlog = lazy(() => import('./pages/SingleBlog.jsx'));
+const ViewerProfile = lazy(() => import('./pages/ViewerProfile.jsx'));
+const Login = lazy(() => import('./pages/Login.jsx'));
+const SignUp = lazy(() => import('./pages/SignUp.jsx'));
 
 let persistor = persistStore(store)
-
+ 
 const router = createBrowserRouter([
-  {
-    element: <App/>,
-    errorElement:<Error/>,
-    children : [
-      {
-        path:'/',
-        element:<Home/>
+  { 
+    element: <App />,  
+    errorElement: <Error />,
+    children: [
+      {  
+        path: '/',
+        element: <Suspense fallback={<SkeletonLoader/> }><Home /></Suspense>
       },
       {
-        path:'/about-us',
-        element:<AboutUs/>
+        path: '/about-us',
+        element: <Suspense fallback={<SkeletonLoader />}><AboutUs /></Suspense>
+      }, 
+      {
+        path: '/explore-blogs',
+        element: <Suspense fallback={<SkeletonLoader />}><ExploreBlogs /></Suspense>
       },
       {
-        path:'/explore-blogs',
-        element:<ExploreBlogs/>
+        path: '/blog/:blogId',
+        element: <Suspense fallback={<SkeletonLoader />}><SingleBlog /></Suspense>
       },
-      {
-        path:'/blog/:blogId',
-        element:<SingleBlog/>
-      },
-      {
-         element:<PrivateRoute/>,
-         children:[
+      { 
+        element: <PrivateRoute />,
+        children: [
           {
             path: '/create-blog/:username',
-            element: <CreateBlog />
+            element: <Suspense fallback={<SkeletonLoader />}><CreateBlog /></Suspense>
           },
-          // {
-          //   path: '/profile/:username',
-          //   element: <EditProfile/>
-          // },
-         ]
+        ]
+      }, 
+      {
+        path: '/profile/:username',
+        element: <Suspense fallback={<SkeletonLoader />}><ViewerProfile /></Suspense>
       },
       {
-            path: '/profile/:username',
-            element: <ViewerProfile/>
-          },
-      {
-        path:'/sign-up',
-        element:<SignUp/>
+        path: '/sign-up',
+        element: <Suspense fallback={<SkeletonLoader />}><SignUp /></Suspense>
       },
       {
-        path:'/login',
-        element:<Login/>
+        path: '/login',
+        element: <Suspense fallback={<SkeletonLoader />}><Login /></Suspense>
       },
     ]
   }
-], {
+], { 
   scrollRestoration: 'top',
 })
 
@@ -76,8 +80,9 @@ const root = createRoot(document.getElementById('root'))
 root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <RouterProvider router={router} />
+      <SkeletonTheme baseColor="#313131" highlightColor="#525252">
+        <RouterProvider router={router} />
+      </SkeletonTheme>
     </PersistGate>
-  </Provider>
+  </Provider> 
 )
- 

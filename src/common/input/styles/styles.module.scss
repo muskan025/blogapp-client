@@ -22,7 +22,7 @@ h2:before{
 
 .input{
     padding: 15px 20px;
-    font-size: 14px;
+    font-size: $text-s; 
     width: 100%;
     font-family: inherit;
     border-radius: 20px;
@@ -35,7 +35,7 @@ h2:before{
 }
 
 .input::placeholder{
-    font-size: 16px;
+  font-size: $text-s; 
     font-weight: 500;
     color: $f-color;
 }
@@ -48,11 +48,14 @@ h2:before{
   .file_input{
     opacity: 0;
     width: 100%;
+    z-index: 10;
+    position: relative;
   }
 
   .file_input_label{ 
     position: absolute;
     left: 20px;
+    text-wrap: nowrap;
   }
 
   .image_icon{
@@ -78,9 +81,28 @@ h2:before{
    }
    
   }
+
+  .btn {
+    border-radius: clamp(15px, 2vw, 20px);
+    border: 1px solid transparent;
+    padding: clamp(8px, 1.5vw, 10px) clamp(15px, 2.5vw, 20px);
+    font-size: clamp(14px, 2vw, 16px);
+    font-weight: 600;
+    font-family: inherit;
+    background-color: $primary-accent;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.5s ease-in-out;
+    margin-top: clamp(20px, 3vw, 30px);
+  
+    &:hover{
+      border: 1px solid $primary-accent;
+      background-color: $dark-theme;
+      }
+  }
  
   .error{
-    color: red;
     font-size: $text-xs;
+    text-decoration-line: spelling-error;
    }
  

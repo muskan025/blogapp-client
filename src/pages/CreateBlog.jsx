@@ -1,12 +1,11 @@
 import BlogEditor from "../components/textEditor/BlogEditor"
-
-
+ 
 const CreateBlog = () => {
 
     return (
-        <main>
+        <section >
              <BlogEditor/>
-        </main>
+        </section>
     )
 }
 

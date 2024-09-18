@@ -4,15 +4,13 @@ const blogSlice = createSlice({
     name:'blog',
     initialState:{
         myBlogs:null,
-        allBlogs:null
+       
     },
     reducers:{
         setMyBlogs:(state,action)=>{
             state.myBlogs = action.payload
         },
-        setAllBlogs:(state,action)=>{
-            state.allBlogs = action.payload
-        },
+        
     }
 })
 

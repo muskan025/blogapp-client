@@ -5,6 +5,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Footer from './common/footer/Footer'
 import Header from './common/header/Header'
 import { useEffect } from 'react';
+import indexStyle from './styles/index.module.scss'
+
  
 function App() {
 
@@ -28,9 +30,13 @@ function App() {
       draggable
       pauseOnHover
       theme="dark"
+      className={indexStyle.toast_container}
       />
-      <Outlet />
+     <main className={indexStyle.main_content_wrapper}>
+     <Outlet />
+     </main>
       <Footer />
+      
      </>
   )
 }

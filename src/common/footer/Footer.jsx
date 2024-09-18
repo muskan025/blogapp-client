@@ -34,7 +34,6 @@ const scrollToTop = (e) => {
     <div className={styles.footer}>
       <div className={styles.fMain}>
         <Link to="/about-us">About us</Link>
-        
       </div>
       <div className={styles.fSocialLinks}>
         <div className={styles.links}>

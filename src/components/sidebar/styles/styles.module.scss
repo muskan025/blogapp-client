@@ -23,13 +23,19 @@
 
 .heart, .share,.icon{
 font-weight: $f-l; 
-font-size: 35px;
+font-size: clamp(24px, 4vw, 35px);
 cursor: pointer;
 }
 
+.liked_heart{
+    fill: $primary-accent;
+}
 .heart_container{
     display: grid;
     place-items: center;
+    p{
+        font-size: $text-xs;
+    }
 }
 
 .calendar{
@@ -37,7 +43,28 @@ cursor: pointer;
     position: relative;
 }
 
-@media (max-width:768px) {
+
+  @media (max-width:768px) {
+
+        .sidebar_container{
+            flex-direction: row;
+            border-top: 1px solid #756869;
+            border-bottom: 0;
+            border-left: none;
+            border-right: none;
+            border-radius: 0;
+            padding-block: 7px;
+            width: 100%;
+            height: auto;
+            position: fixed;
+            top: 89vh;
+            background-color: #1D1D1D;
+            justify-content: space-evenly;
+         }
+     
+  }
+
+  @media (max-width:425px) {
 
     .sidebar_container{
         flex-direction: row;
@@ -46,14 +73,12 @@ cursor: pointer;
         border-left: none;
         border-right: none;
         border-radius: 0;
-        padding-block: 13px;
+        padding-block: 7px;
         width: 100%;
+        height: auto;
         position: fixed;
-        top: 85vh;
+        top: 91vh;
         background-color: #1D1D1D;
         justify-content: space-evenly;
-
-       
      }
-    
   }

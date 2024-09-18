@@ -7,6 +7,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding: 0 20px;
     
       .profileImg{
         width: 100%;
@@ -15,15 +16,22 @@
         border-radius: 50%;
        }
       .defaultImg{
+        display: flex;
+        justify-content: center;
+        align-items: center;
         width: 100%;
         max-width:130px;
         height: 130px;
         border-radius: 50%;
         padding: 3.5rem;
         font-size: $heading-h1;
+        font-weight: $f-l;
+
+        a{
+          color:$f-color;
+        }
        }
       
-     
       .user_details{
         display: flex;
         flex-direction: column;
@@ -78,7 +86,7 @@
           margin-bottom: 10px;
           vertical-align: bottom;
           color: #ffffff;
-
+          border:none;
         }
         
         .niche:hover {
@@ -91,6 +99,7 @@
            text-align: center;
            max-width: 547px;  
            text-wrap: balance;
+           font-size: $text-s;
             }
     
             

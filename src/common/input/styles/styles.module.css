@@ -22,7 +22,7 @@ h2:before {
 
 .input {
   padding: 15px 20px;
-  font-size: 14px;
+  font-size: clamp(13px, 2vw, 15px);
   width: 100%;
   font-family: inherit;
   border-radius: 20px;
@@ -37,13 +37,13 @@ h2:before {
 }
 
 .input::-moz-placeholder {
-  font-size: 16px;
+  font-size: clamp(13px, 2vw, 15px);
   font-weight: 500;
   color: #d9d9d9;
 }
 
 .input::placeholder {
-  font-size: 16px;
+  font-size: clamp(13px, 2vw, 15px);
   font-weight: 500;
   color: #d9d9d9;
 }
@@ -56,11 +56,14 @@ h2:before {
 .file_input {
   opacity: 0;
   width: 100%;
+  z-index: 10;
+  position: relative;
 }
 
 .file_input_label {
   position: absolute;
   left: 20px;
+  text-wrap: nowrap;
 }
 
 .image_icon {
@@ -89,7 +92,25 @@ h2:before {
   font-weight: 500;
 }
 
+.btn {
+  border-radius: clamp(15px, 2vw, 20px);
+  border: 1px solid transparent;
+  padding: clamp(8px, 1.5vw, 10px) clamp(15px, 2.5vw, 20px);
+  font-size: clamp(14px, 2vw, 16px);
+  font-weight: 600;
+  font-family: inherit;
+  background-color: #F67280;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.5s ease-in-out;
+  margin-top: clamp(20px, 3vw, 30px);
+}
+.btn:hover {
+  border: 1px solid #F67280;
+  background-color: #1D1D1D;
+}
+
 .error {
-  color: red;
   font-size: clamp(11px, 1.8vw, 13px);
+  text-decoration-line: spelling-error;
 }/*# sourceMappingURL=styles.module.css.map */

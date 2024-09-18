@@ -1,24 +1,27 @@
 /* eslint-disable react/prop-types */
-
-import styles from "../blogCard/styles/styles.module.css"
 import { UserDetails } from "../blogCard/BlogCard"
 import { Link } from "react-router-dom"
 import { useCallback, useEffect, useState } from "react"
 import { PiCaretCircleLeftLight, PiCaretCircleRightLight } from "react-icons/pi"
+import SkeletonSlide from "../Skeletons/SkeletonSlide"
+import { LazyLoadImage,trackWindowScroll } from 'react-lazy-load-image-component';
+import CarouselItem from "./CarouselItem"
+import styles from "../blogCard/styles/styles.module.scss"
 
-const Carousel = ({data}) => {
+const Carousel = ({ data = [], isLoading, scrollPosition}) => {
 
     const [current, setCurrent] = useState(0)
     const [isAutoSliding, setIsAutoSliding] = useState(true)
 
+    const skeletonCount = 5
+    const slideCount = isLoading ? skeletonCount : data.length 
+
     const prev = useCallback(() => {
-        setCurrent((prev) => prev === 0 ? data.length - 1 : prev - 1)
+        setCurrent((curr) => curr === 0 ? slideCount - 1 : curr - 1)
     }, [])
 
     const next = useCallback(() => {
-        setCurrent((prev) => prev === data.length - 1 ? 0 : prev + 1)
-
-
+        setCurrent((curr) => curr === slideCount - 1 ? 0 : curr + 1)
     }, [])
 
 
@@ -48,46 +51,25 @@ const Carousel = ({data}) => {
 
     }
 
-    return (
-        <div className={styles.carousel_container}>
+     return (
+        <section className={styles.carousel_container} aria-label="Featured blog posts carousel" role="region" >
 
             <div className={styles.carousel}
                 style={{ transform: `translateX(-${current * 100}%)` }}>
 
                 {
-                    data.length > 0 && data.map((blog) => {
+                     
+                        data.length > 0 && data.map((blog,index) => {
 
-                        const{_id,title,thumbnail,readTime,userId,createdAt} = blog
-
-            const createdAtDate = new Date(createdAt);
-            const dateNum = createdAtDate.getDate();
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const month = monthNames[createdAtDate.getMonth()];
-            const year = createdAtDate.getFullYear();
-            var date = `${dateNum} ${month}, ${year}`
-            const image = `http://localhost:8000/${thumbnail}`
-            const profileImage = `http://localhost:8000/${userId.profileImg}`
-            const blogData = {...blog,date,thumbnail:image}
-
-                        return (<div key={_id} className={styles.carousel_item}>
-
-                            <img src={image} alt="Blog thumbnail" className={styles.carousel_img} />
-                            <div className={styles.arrow_text_container}>
-                                <span className={styles.icon} onClick={() => handleManualSliding('prev')}><PiCaretCircleLeftLight /></span>
-                                <div className={styles.text_container}>
-                                  <Link to={`/explore-blogs`} state={userId.niche}><p className={styles.niche}>{userId.niche}</p></Link>
-                                    <Link to={`/blog/${_id}`} state={blogData} className={styles.title}>
-                                        <h1 >{title}</h1></Link>
-                                    <UserDetails userId={userId._id} profileImg={profileImage} username={userId.username} date={date} readTime={readTime} comp="carousel" user={userId}/>
-                                </div>
-                                <span className={styles.icon} onClick={() => handleManualSliding('next')}><PiCaretCircleRightLight /></span>
-                            </div>
-                        </div>)
-                    })
+                            const { _id} = blog
+                            return (
+                                <CarouselItem key={_id} blog={blog} totalSlides={slideCount} index={index} scrollPosition={scrollPosition} handleManualSliding={handleManualSliding}/>
+                            )
+                        })
                 }
             </div>
-        </div>
+        </section>
     )
 }
 
-export default Carousel
+export default trackWindowScroll(Carousel)

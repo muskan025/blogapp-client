@@ -2,52 +2,52 @@
 export const validateEmail = (email) => {
     const emailRegex = 	/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if (!email) {
-      return { isValid: false, error: 'Email is required.' };
+      return { error: 'Email is required.' };
     }
     if (!emailRegex.test(email)) {
-      return { isValid: false, error: 'Please enter a valid email address.' };
+      return {  error: 'Please enter a valid email address.' };
     }
-    return { isValid: true, error: null };
+    return {error: null };
   };
   
    export const validateUsername = (username) => {
 
      if (!username) {
-      return { isValid: false, error: 'Username is required.' };
+      return {  error: 'Username is required.' };
     }
     if (username.length < 3) {
-      return { isValid: false, error: 'Username must be at least 3 characters long.' };
+      return {  error: 'Username must be at least 3 characters long.' };
     }
     if (username.length > 20) {
-      return { isValid: false, error: 'Username cannot exceed 20 characters.' };
+      return {   error: 'Username cannot exceed 20 characters.' };
     }
     if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-      return { isValid: false, error: 'Username can only contain letters, numbers, and underscores.' };
+      return { error: 'Username can only contain letters, numbers, and underscores.' };
     }
-    return { isValid: true, error: null };
+    return { error: null };
   };
   
    export const validatePassword = (password) => {
 
      if (!password) {
-      return { isValid: false, error: 'Password is required.' };
+      return {  error: 'Password is required.' };
     }
     if (password.length < 8) {
-      return { isValid: false, error: 'Password must be at least 8 characters long.' };
+      return {  error: 'Password must be at least 8 characters long.' };
     }
     if (!/[A-Z]/.test(password)) {
-      return { isValid: false, error: 'Password must contain at least one uppercase letter.' };
+      return {  error: 'Password must contain at least one uppercase letter.' };
     }
     if (!/[a-z]/.test(password)) {
-      return { isValid: false, error: 'Password must contain at least one lowercase letter.' };
+      return {  error: 'Password must contain at least one lowercase letter.' };
     }
     if (!/[0-9]/.test(password)) {
-      return { isValid: false, error: 'Password must contain at least one number.' };
+      return { error: 'Password must contain at least one number.' };
     }
     if (!/[!@#$%^&*]/.test(password)) {
-      return { isValid: false, error: 'Password must contain at least one special character (!@#$%^&*).' };
+      return {  error: 'Password must contain at least one special character (!@#$%^&*).' };
     }
-    return { isValid: true, error: null };
+    return { error: null };
   };
 
  
@@ -56,14 +56,14 @@ export const validateEmail = (email) => {
       return { error: 'Bio must be a string' };
     }
     if (bio.length < 10 || bio.length > 255) {
-      return { error: 'Bio must be between 10 and 200 characters' };
+      return { error: 'Bio must be between 10 and 255 characters' };
     }
     return { error: null };  
   };
 
   export const validateNiche = (niche) => {
     if (typeof niche !== 'string' || niche.trim() === '') {
-      return { error: 'Niche must be a non-empty string' };
+      return { error: 'Niche must not be empty' };
     }
     if (!isNaN(niche)) {
       return { error: 'Niche cannot be a number' };
@@ -107,7 +107,7 @@ export const validateEmail = (email) => {
   };
 
   export const validateImage = (file) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webP'];
     if (!allowedTypes.includes(file.type)) {
       return {error:"Please upload a JPEG, PNG, or GIF image."}
     }

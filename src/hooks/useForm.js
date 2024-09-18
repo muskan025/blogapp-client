@@ -2,14 +2,13 @@ import { useState } from "react"
 
 export const useForm = (initialState) => {
     const [formData, setFormData] = useState(initialState)
-    const [errors, setErrors] = useState(initialState)
+    const [errors, setErrors] = useState({})
     const [image, setImage] = useState(null)   
 
 
     function handleChange(e) {
 
-         
-        setErrors(initialState)
+        // setErrors(initialState)
         const { name, value, files, type } = e.target
         setFormData((prev) => ({
             ...prev,
@@ -19,8 +18,7 @@ export const useForm = (initialState) => {
     }
 
     function handleImage(e) {
-        console.log("inside image hook");
-        const file = e.target.files[0];
+         const file = e.target.files[0];
 
           setImage({
             file: file,

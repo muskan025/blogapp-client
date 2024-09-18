@@ -2,31 +2,48 @@
 import styles from "./styles/styles.module.css";
 import BannerImage from "../BannerImage";
 import aboutUs from '../../assets/about_us.jpg'
-import { BiHeart, BiShare, BiDotsHorizontalRounded} from "react-icons/bi";
+import { BiHeart, BiShare, BiDotsHorizontalRounded, BiSolidHeart } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { AboutExcerpt } from "../../pages/AboutUs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsPen, BsTrash } from "react-icons/bs";
 import { BlogContent } from "../BlogContent";
-import { useDeleteBlogMutation, useLikeBlogsMutation } from "../../reduxToolkit/slices/apiSlice";
+import { useDeleteBlogMutation, useGetAllBlogsQuery, useLikeBlogsMutation } from "../../reduxToolkit/slices/apiSlice";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { LazyLoadImage,trackWindowScroll} from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
-const BlogCard = ({ image = true, blogHeader = true, comp,user, titleFont,profileImg, blogId, blogImage, niche, blogTitle, textBody, username, date,likes, readTime,data }) => {
+const BlogCard = ({ image = true, blogHeader = true, comp, user, titleFont, profileImg, blogId, blogImage, niche, blogTitle, textBody, username, date, likes, likesCount, readTime, data,scrollPosition }) => {
 
-  const [showMore,setShowMore] = useState(false)
-  const [likeBlogs] = useLikeBlogsMutation() 
-  const [deleteBlog] = useDeleteBlogMutation() 
-  const {author,isAuth} = useSelector((state)=>state.userData)
+  const [showMore, setShowMore] = useState(false)
+  const [isBlogLiked, setIsBlogLiked] = useState(false)
+  const [likeBlogs] = useLikeBlogsMutation()
+  const [deleteBlog] = useDeleteBlogMutation()
+  const { author, isAuth } = useSelector((state) => state.userData)
   const isOwnProfile = isAuth && author?.username === username;
+  const { data: allBlogs } = useGetAllBlogsQuery();
+ 
+  const currentBlog = allBlogs?.find(blog => blog._id === blogId);
 
-  async function handleLike(){
-      try{
-      await likeBlogs({blogId,username}).unwrap()
-      }
-     catch(error){
+  const likesNum = currentBlog?.likesCount || 0;
+   
+  async function handleLike() {
+    try {
+      await likeBlogs({ blogId, username }).unwrap()
+    }
+    catch (error) {
       toast.error("Something went wrong,please try again")
-     }
+    }
+    setIsBlogLiked(!isBlogLiked)
+  }
+
+  function checkIsBlogLiked() {
+
+    if (author && author.userId && Array.isArray(likes)) {
+      const userLikedBlog = likes.includes(author.userId);
+      setIsBlogLiked(userLikedBlog);
+    }
   }
 
   async function handleShare() {
@@ -54,52 +71,67 @@ const BlogCard = ({ image = true, blogHeader = true, comp,user, titleFont,profil
 
   }
 
-  async function handleDelete(){
+  async function handleDelete() {
     try {
       const response = await deleteBlog(blogId).unwrap()
-       if(response.status !== 200) toast.error(response.message)
-         
+      if (response.status !== 200) toast.error(response.message)
+
     } catch (error) {
       toast.error("Something went wrong,please try again")
     }
   }
-    return (
+
+  useEffect(() => {
+    checkIsBlogLiked()
+  }, [author,likes])
+
+  return (
     <div className={styles.masonry_item}>
       {
         image ? (<div className={styles.blog_img_container}>
           <Link to={`/blog/${blogId}`} state={data}>
-            <img src={blogImage} alt="Blog Image" className={styles.blog_img} />
+          
+             <LazyLoadImage
+              src={blogImage}
+              alt="Blog Image"
+              effect="blur" 
+              scrollPosition={scrollPosition}
+              className={styles.blog_img}
+              wrapperClassName={styles.blog_img_wrapper}
+            />
           </Link>
         </div>) : (comp === "singleBlog" ? <BannerImage image={blogImage} blogId={blogId} /> : (<BannerImage image={aboutUs} />))
       }
       {
         blogHeader && <div className={styles.blog}>
           <div className={styles.niche__interactive_container}>
-          <Link to={`/explore-blogs`} state={niche}><p className={styles.niche}>{niche}</p></Link>
+            <Link to={`/explore-blogs`} state={niche}><p className={styles.niche}>{niche}</p></Link>
             {
-             ( comp === "home" || comp === "profile") && <ul className={styles.interactive_container}>
-                { comp === "profile" && isOwnProfile && <li onClick={()=> setShowMore(!showMore)} className={styles.showmore_container}>
-                  <BiDotsHorizontalRounded /> 
-                    {showMore && <ul>
+              (comp === "home" || comp === "profile") && <ul className={styles.interactive_container}>
+                {comp === "profile" && isOwnProfile && <li onClick={() => setShowMore(!showMore)} className={styles.showmore_container}>
+                  <BiDotsHorizontalRounded />
+                  {showMore && <ul>
                     <li>
-                      <BsPen /> 
-                       <Link to={`/create-blog/${username}`} state={data}>Edit</Link> 
-                      </li>
+                      <BsPen />
+                      <span>
+                        <Link to={`/create-blog/${username}`} state={data}>Edit</Link>
+                      </span>
+                    </li>
                     <li className={styles.delete}>
-                       <BsTrash /> 
+                      <BsTrash />
                       <span onClick={handleDelete}>Delete</span>
-                      </li>
+                    </li>
                   </ul>
-                    }
-                  
+                  }
+
                 </li>
                 }
-                <li>
-                  <BiHeart className={styles.heart} onClick={handleLike} />
-                  <span>{likes}</span>
+                <li className={styles.heart_container}>
+                  <BiSolidHeart className={`${styles.heart} ${isBlogLiked && styles.liked_heart}`} onClick={handleLike} />
+                  <span>{likesNum}</span>
                 </li>
                 <li>
-                  <BiShare className={styles.share} onClick={handleShare}/>
+                  <BiShare className={styles.share} onClick={handleShare} />
                 </li>
 
               </ul>
@@ -109,19 +141,19 @@ const BlogCard = ({ image = true, blogHeader = true, comp,user, titleFont,profil
             <h1 className={styles.title} style={`${titleFont}` && { "fontSize": `${titleFont}` }}>
               {blogTitle}
             </h1>
-          </Link>:
-           <h1 className={styles.title} style={`${titleFont}` && { "fontSize": `${titleFont}` }}>
-           {blogTitle}
-         </h1>
-         }
-          {comp !== "singleBlog" && 
-          <p className={styles.info}>
-            <BlogContent content={textBody}/>
-          </p>
+          </Link> :
+            <h1 className={styles.title} style={`${titleFont}` && { "fontSize": `${titleFont}` }}>
+              {blogTitle}
+            </h1>
+          }
+          {comp !== "singleBlog" &&
+            <p className={styles.info}>
+              <BlogContent content={textBody} />
+            </p>
           }
 
-            <UserDetails  username={username} profileImg={profileImg} date={date} comp={comp} readTime={readTime} user={user}/>
-          
+          <UserDetails username={username} profileImg={profileImg} date={date} comp={comp} readTime={readTime} user={user} />
+
         </div>
       }
       {
@@ -132,28 +164,29 @@ const BlogCard = ({ image = true, blogHeader = true, comp,user, titleFont,profil
 };
 
 
-export const UserDetails = ({username, profileImg,date, comp,readTime,user }) => {
+
+export const UserDetails = ({ username, profileImg, date, comp, readTime, user }) => {
 
   return (
-    <div className={styles.blogger_details}>
-    <div className={styles.profile_img}>
-    <Link to={`/profile/${username}`} state={user}>
-      <img src={profileImg} alt="Profile Image" />
-      <span className={styles.blogger_name}>{username}</span>
-    </Link>
-  </div>
-            <div>
-              <span className={styles.dot_one}></span>
-              <span className={styles.date}>{date}</span>
-              {(comp === "singleBlog" || comp === "carousel") &&
-                <>
-                  <span className={styles.dot}></span>
-                  <span className={styles.read_time}>{readTime}</span>
-                </>
-              }
-            </div>
-            </div>
+    <section className={styles.blogger_details}>
+      <div className={styles.profile_img}>
+        <Link to={`/profile/${username}`} state={user}>
+          <img src={profileImg} alt="Profile Image" />
+          <span className={styles.blogger_name}>{username}</span>
+        </Link>
+      </div>
+      <div>
+        <span className={styles.dot_one}></span>
+        <span className={styles.date}>{date}</span>
+        {(comp === "singleBlog" || comp === "carousel") &&
+          <>
+            <span className={styles.dot}></span>
+            <span className={styles.read_time}>{readTime}</span>
+          </>
+        }
+      </div>
+    </section>
 
   )
 }
-export default BlogCard;
+export default trackWindowScroll(BlogCard);

@@ -2,19 +2,20 @@
 @import "../../../styles/var";
 @import "../../../styles/mixin";
 
+ 
 .footer {
     width: 100%;
     background-color: $bg-color;
     display: flex;
     flex-direction: column;
     text-align: center;
-     
+    font-size: $text-s;
+    gap:2rem;
+    // margin-top: auto;
   }
   
-  .footer > * {
-    margin: 1.5rem 1rem;
-  }
-  .fMain{
+ 
+  .fMain{  
     display: grid;
   }
   .fSocialLinks{
@@ -30,6 +31,7 @@
     padding: 1.3em;
     margin-inline: 1rem;
     text-wrap: balance;
+    margin-bottom: 0;
   }
   .links{
     display: flex;

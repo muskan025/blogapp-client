@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from "react-router-dom";
-import { CiSettings } from "react-icons/ci";
-import styles from "../styles/index.module.css";
 import BlogCards from "../components/blogCards/BlogCards";
 import ProfileCard from "../components/profileCard/ProfileCard";
 import { toast } from 'react-toastify';
-import { useGetAllBlogsQuery, useGetUserBlogsMutation, useLogoutFromAllDevicesMutation, useLogoutMutation } from '../reduxToolkit/slices/apiSlice';
-import { clearUser, setAuthStatus, setUser } from '../reduxToolkit/slices/userSlice';
+import { useGetUserBlogsMutation, useLogoutFromAllDevicesMutation, useLogoutMutation } from '../reduxToolkit/slices/apiSlice';
+import { clearUser, setAuthStatus } from '../reduxToolkit/slices/userSlice';
 import { setMyBlogs } from '../reduxToolkit/slices/blogSlice';
+import { BiUser } from 'react-icons/bi';
+import { ImFileEmpty } from 'react-icons/im';
+import indexStyles from "../styles/index.module.scss";
 
 const ViewerProfile = () => {
 
@@ -41,6 +42,7 @@ const ViewerProfile = () => {
         navigate(-1)
       }
       else {
+        console.log('place of origin:' ,response.message)
         toast.error(response.message)
       }
 
@@ -59,8 +61,10 @@ const ViewerProfile = () => {
       if (response.status === 200) {
         dispatch(clearUser());
         navigate('/')
+        toast.success("Logout successful!")
       }
       else {
+        console.log(response)
         toast.error(response.message || "Logout failed!")
       }
     }
@@ -85,30 +89,33 @@ const ViewerProfile = () => {
 
   return (
 
-    <main className={styles.user_profile}>
+    
+    <section className={`${indexStyles.user_profile} ${indexStyles.wrapper}`}>
+      
       {
-        isOwnProfile && <div className={styles.settings}  onClick={() => setIsSettings(!isSettings)} onMouseEnter={() => setIsSettings(!isSettings)}>
-        <div className={`${styles.settings_header}`}>
-          <span>Settings</span>
-          <CiSettings className={styles.icon} />
+        isOwnProfile && <aside className={`${indexStyles.settings} ${isSettings? indexStyles.open_settings: ''}`}  onClick={() => setIsSettings(!isSettings)} onMouseEnter={() => setIsSettings(!isSettings)}>
+        <div className={`${indexStyles.settings_header}`}>
+          <span>Account</span>
+          <BiUser className={indexStyles.icon} />
         </div>
         {isSettings && (
-          <div className={styles.options_container}>
-            <p className={`${styles.logout} ${styles.options}`} onClick={() => handleLogout(logout, "Logout successful!")}>Logout</p>
-            <p className={`${styles.logoutAll} ${styles.options}`} onClick={() => handleLogout(logoutFromAllDevices, "Logout from all devices successful!")}>Logout from all devices</p>
-            <p className={`${styles.delete_account} ${styles.options}`}>Delete Account</p>
-          </div>
+          <div className={`${indexStyles.options_container}`}>
+            <p className={`${indexStyles.logout} ${indexStyles.options}`} onClick={() => handleLogout(logout, "Logout successful!")}>Logout</p>
+            <p className={`${indexStyles.logoutAll} ${indexStyles.options}`} onClick={() => handleLogout(logoutFromAllDevices, "Logout from all devices successful!")}>Logout from all devices</p>
+           </div>
         )}
-      </div>
+      </aside>
       }
     <ProfileCard user={state} blogsCount={fetchedBlogs.length} comp='profile'/>
 
-      <div className={styles.user_blogs}>
-        {fetchedBlogs?.length === 0 ? <h1>No blogs yet, create some!</h1> :
-          <BlogCards data={fetchedBlogs} comp="profile" />
+      <section className={indexStyles.user_blogs}>
+        {fetchedBlogs?.length === 0 ? <section className={indexStyles.empty_section}>
+          <h2>No blogs yet, create some!</h2> 
+          <ImFileEmpty className={indexStyles.empty_blog}/></section>:
+          <BlogCards data={fetchedBlogs} comp="profile" isLoading={isBlogsLoading}/>
         }
-      </div>
-    </main>
+      </section>
+    </section>
   );
 };
 

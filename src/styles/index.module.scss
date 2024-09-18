@@ -14,7 +14,24 @@
     font-family:  Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.4;
     font-weight: 400;
-     
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .main_content_wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .toast_container {
+    font-size: $text-s;
+  }
+  
+  input{
+    caret-color: $primary-accent
   }
 
 ::-webkit-scrollbar {
@@ -46,8 +63,9 @@
   background-position: center;
  
 }
-
-  main{
+ 
+  .wrapper{
+    flex:1;
     padding-block: 145px 60px;
   }
 .home{
@@ -82,7 +100,7 @@ ul{
   margin: 0;
 }
 
-button {
+.btn {
   border-radius: clamp(15px, 2vw, 20px);
   border: 1px solid transparent;
   padding: clamp(8px, 1.5vw, 10px) clamp(15px, 2.5vw, 20px);
@@ -94,11 +112,11 @@ button {
   cursor: pointer;
   transition: all 0.5s ease-in-out;
   margin-top: clamp(20px, 3vw, 30px);
-}
 
-button:hover{
-border: 1px solid $primary-accent;
-background-color: $dark-theme;
+  &:hover{
+    border: 1px solid $primary-accent;
+    background-color: $dark-theme;
+    }
 }
 
 .form_container{
@@ -126,27 +144,17 @@ background-color: $dark-theme;
   font-size: $text-s;
   text-align: center;
 }
+
+.error{
+  text-decoration-line: spelling-error;
+    margin-bottom: 10px;
+}
+
 a{
   font-weight: $f-xs;
 }
 }
 
-// .explore_blogs{
-
-//   .searchbar{
-//     padding: 20px 20px 0 20px;
-//     border-radius: 20px;
-//     background: #2B2B2B;
-//     width: 81vw;
-//     margin-inline: auto;
-//     margin-bottom: 20px;
-// }
-  
-// .niche_name{
-//     color: $primary-accent;
-// }
-
-// }
 .explore_blogs {
   width: 81vw;
   margin-inline: auto;
@@ -156,26 +164,40 @@ a{
     padding: 20px 20px 0 20px;
     border-radius: 20px;
     background: #2B2B2B;
-    margin-bottom: 40px; /* Increased margin for better spacing */
+    margin-bottom: 40px;  
+     
+  }
+
+  .explore_content{
+    display: flex;
+    flex-direction: column;
   }
   
    .niche_name {
     color: #F67280;
   }
   
-    h1 {
-    margin-bottom: 20px; /* Add space below the heading */
+    h2{
+    margin-bottom: 20px; 
+    align-self: flex-start; 
+
+    &::before{
+      background:none;
+    }
   }
+
   
     p {
-    max-width: 800px; /* Limit the width for better readability */
-    margin: 0 auto 40px; /* Center the paragraph and add bottom margin */
-    line-height: 1.6; /* Improve line spacing for readability */
+    max-width: 800px;  
+    margin: 0 auto 40px;  
+    line-height: 1.6;
+    text-wrap: pretty;
+    font-size: $text-s;  
   }
   
   b {
-    display: block; /* Put the bold text on its own line */
-    margin-top: 20px; /* Add some space above the bold text */
+    display: block;  
+    margin-top: 20px;  
   }
   
   /* Responsive adjustments */
@@ -190,18 +212,12 @@ a{
   }
 }
 
-.user_blogs{
-  h1{
-    text-align: center;
-    margin-top: 30px;
-  }
-}
+ 
 
 .user_profile{
   
   .settings{
     display: grid; 
-    /* gap: 0px; */
     background: #2B2B2B;
     border-radius: 20px;
     width: 150px;
@@ -231,12 +247,7 @@ a{
         margin-right: 10px;
        }
       .icon{
-        font-size: 1.5rem;
-        &:hover{
-          transform: rotate(180deg);
-          transition: transform 0.5s ease-out;
-        }
-        
+        font-size: 1.3rem;
       }
     }
 
@@ -262,12 +273,8 @@ a{
     &:hover{
       opacity: 0.5;
     }
-
-    &:nth-child(3){
-      color: #ff00009d;
-    }
-    &:nth-child(1),
-    &:nth-child(2) {
+ 
+    &:nth-child(1) {
       &::after {
         content: '';
         position: absolute;
@@ -297,6 +304,22 @@ a{
 
   }
  
+  .user_blogs{
+    .empty_section{
+      display: flex;
+      gap:10px;
+      justify-content: center;
+      align-items: baseline;
+    }
+    
+    h2::before{
+      background: none;
+    }
+    .empty_blog{
+      font-weight: bold;
+      font-size: $heading-h2;
+    }
+  }
 
 }
 .error_page{
@@ -307,7 +330,7 @@ a{
   gap:30px; 
 
   img{
-    max-width: 825px;
+    max-width: 440px;
   }
   p{
     font-size: clamp(20px, 6vw, 40px);
@@ -323,15 +346,22 @@ a{
     border-radius: 50%;
     width: 40px !important;
      max-width: none;
+     justify-content: center;
+    }
+    .open_settings{
+      width:114px !important;
     }
 
   .settings_header span{
     display: none;
   }
-  .settings_header {
-    padding: 5px;
-    justify-content: center;
-    align
-  }
+
+  .toast_container{
+   width: 70vw !important;
+      left: 10px !important;
+      right: 10px !important;
+       margin-bottom: 1rem;
+       }
+   
  
 }

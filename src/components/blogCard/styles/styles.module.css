@@ -26,13 +26,22 @@
 }
 .blog_img_container a {
   margin: 0;
+  display: block;
+  overflow: hidden;
 }
 
-.blog_img_container img {
+.blog_img_wrapper {
   border-radius: 20px;
-  transition: transform 0.9s ease-in;
+  overflow: hidden;
+}
+.blog_img_wrapper img {
   -o-object-fit: cover;
      object-fit: cover;
+}
+
+.masonry_item:hover .blog_img_wrapper img {
+  transform: scale(1.2);
+  transition: all 0.9s ease-in-out;
 }
 
 .blog {
@@ -40,13 +49,10 @@
   display: flex;
 }
 
-.masonry_item:hover .blog_img {
-  transform: scale(1.2);
-}
-
 .niche__interactive_container {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 .niche__interactive_container .niche {
   padding: 0.3em 0.8em;
@@ -58,9 +64,13 @@
   transition: all 0.5s ease-out;
   margin-bottom: 10px;
   align-self: flex-start;
+  border: none;
 }
 .niche__interactive_container .niche:hover {
   background-color: #1D1D1D;
+}
+.niche__interactive_container a {
+  margin: 0;
 }
 .niche__interactive_container .interactive_container {
   display: flex;
@@ -95,8 +105,8 @@
   border-radius: 4px;
 }
 .niche__interactive_container .interactive_container .showmore_container ul li svg {
-  margin-right: 10px;
-  min-width: 15px;
+  font-size: 20px;
+  margin-right: 5px;
 }
 .niche__interactive_container .interactive_container .showmore_container ul li span {
   font-size: clamp(11px, 1.8vw, 13px);
@@ -104,12 +114,24 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.niche__interactive_container .interactive_container .showmore_container ul li a {
+  margin: 0;
+}
 .niche__interactive_container .interactive_container .showmore_container ul .delete:nth-child(2) {
   color: #ff4d4d;
 }
 .niche__interactive_container .interactive_container span {
   font-size: clamp(11px, 1.8vw, 13px);
   vertical-align: middle;
+}
+.niche__interactive_container .interactive_container .heart_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-inline: 5px;
+}
+.niche__interactive_container .interactive_container .liked_heart {
+  fill: #F67280;
 }
 .niche__interactive_container .interactive_container .share {
   transition: transform 0.5s ease-in-out;
@@ -119,7 +141,7 @@
 }
 
 .title_container {
-  margin-inline: 0;
+  margin: 0;
 }
 
 .title {
@@ -166,6 +188,7 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  font-size: clamp(13px, 2vw, 15px);
 }
 
 .blogger_details {
@@ -252,6 +275,7 @@
   border-radius: 20px;
   margin-block: 10px 20px;
   text-wrap: balance;
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -260,11 +284,11 @@
   color: #F67280;
   font-size: clamp(1.5rem, 4vw, 6vw);
 }
-.about_us .quote_block p {
-  text-align: center;
+.about_us .quote_block h2::before {
+  display: none;
 }
 .about_us .quote_block i {
-  margin-top: 40px;
+  margin-top: 20px;
 }
 .about_us .welcome {
   color: #fff;
@@ -341,6 +365,24 @@
   border-radius: 20px;
 }
 
+.centered_item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 90px;
+  position: relative;
+}
+
+.text_skeleton {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 400px;
+}
+
 .carousel_container {
   min-height: 100vh;
   width: 100%;
@@ -369,6 +411,10 @@
   -o-object-position: center;
      object-position: center;
 }
+.carousel_container .carousel_item .lazyload_wrapper {
+  width: 100%;
+  height: 100vh;
+}
 .carousel_container .carousel_item .arrow_text_container {
   display: flex;
   justify-content: space-between;
@@ -392,6 +438,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.carousel_container .carousel_item .arrow_text_container .text_container p {
+  padding: 0.3em 0.8em;
+  border-radius: 15px;
+  font-size: clamp(10px, 1.5vw, 12px);
+  font-weight: 700;
+  background-color: #F67280;
+  cursor: pointer;
+  transition: all 0.5s ease-out;
+  margin-bottom: 10px;
+  align-self: flex-start;
+}
+.carousel_container .carousel_item .arrow_text_container .text_container p:hover {
+  background-color: #1D1D1D;
 }
 .carousel_container .carousel_item .arrow_text_container .text_container .title h1 {
   font-weight: 900;

@@ -3,37 +3,23 @@ import Carousel from "../components/carousel/Carousel"
 import styles from "../styles/index.module.css"
 import { useGetAllBlogsQuery } from "../reduxToolkit/slices/apiSlice"
 import { toast } from "react-toastify"
-import { useEffect } from "react"
-import { useDispatch } from "react-redux"
-import { setAllBlogs } from "../reduxToolkit/slices/blogSlice"
+
  
 const Home = () => {
 
   const {data:allBlogs, isLoading:blogLoading, error: blogError} = useGetAllBlogsQuery()
-  const dispatch = useDispatch()
-
-  console.log(allBlogs)
-  useEffect(()=>{
-    if (allBlogs) {
-      dispatch(setAllBlogs(allBlogs));
-   }
-  },[allBlogs])
-
-  if (blogLoading) {
-    return <p>Loading...</p>;
-  }
-
+ 
    if (blogError) {
     toast.error("Error fetching blogs");
   }
 
   const carouselData = allBlogs?.slice(0,5)
    return (
-    <main className={styles.home}>
-      <Carousel data={carouselData} />
-      <BlogCards data={allBlogs} comp="home"/>
-    </main>
-  )
+    <div className={styles.home}>
+      <Carousel data={carouselData} isLoading={blogLoading}/>
+      <BlogCards data={allBlogs} comp="home" isLoading={blogLoading}/>
+    </div>
+  ) 
 }
 
 export default Home

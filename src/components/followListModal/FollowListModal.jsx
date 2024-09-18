@@ -8,64 +8,64 @@ import { useGetFollowerListMutation, useGetFollowingListMutation, useUnfollowMut
 import { toast } from "react-toastify"
 import { useForm } from "../../hooks/useForm"
 
-const FollowListModal = ({ list,userId,setIsFollowing,setShowModal,setFollowCounts}) => {
- 
-    const {author} = useSelector((state)=>state.userData)
+const FollowListModal = ({ list, userId, setIsFollowing, setShowModal, setFollowCounts }) => {
+
+    const { author } = useSelector((state) => state.userData)
     const isOwnProfile = author.userId === userId
-    const [displayedList,setDisplayedList] = useState([])
+    const [displayedList, setDisplayedList] = useState([])
     const [fullList, setFullList] = useState([])
-    const initialState = {searchQuery: ''}
-    const {formData, handleChange} = useForm(initialState)
- 
-     const [ getFollowingList,
-        {isLoading: isFollowingLoading,
-        isError: isFollowingError} ] = useGetFollowingListMutation()
+    const initialState = { searchQuery: '' }
+    const { formData, handleChange } = useForm(initialState)
+
+    const [getFollowingList,
+        { isLoading: isFollowingLoading,
+            isError: isFollowingError }] = useGetFollowingListMutation()
     const [getFollowerList,
-        {isLoading: isFollowerLoading,
-        isError: isFollowerError }] = useGetFollowerListMutation()
-    const [unfollow, {isUnfollowLoading}] = useUnfollowMutation()
+        { isLoading: isFollowerLoading,
+            isError: isFollowerError }] = useGetFollowerListMutation()
+    const [unfollow, { isUnfollowLoading }] = useUnfollowMutation()
 
     async function getList() {
         try {
              const response = await (list === 'Followers' ? getFollowerList(userId).unwrap() : getFollowingList(userId).unwrap())
-            
-             if(response.status === 200){
-                 setDisplayedList(response.data)
-                 setFullList(response.data)
+
+            if (response.status === 200) {
+                setDisplayedList(response.data)
+                setFullList(response.data)
             }
-            else if (response.status === 401){
+            else if (response.status === 401) {
                 toast.info(response.message)
             }
-            else{
+            else {
                 toast.error(response.message)
             }
         }
         catch (error) {
-            console.error('Error in getList:', error);
+
             toast.error('Something went wrong, please refresh')
         }
     }
 
-    async function handleUnfollow(unfollowUserId,username) {
+    async function handleUnfollow(unfollowUserId, username) {
         try {
             setFollowCounts(prev => ({
                 ...prev,
                 followingCount: prev.followingCount - 1
-              }));
+            }));
 
             const response = await unfollow(unfollowUserId).unwrap()
 
-            if(response.status === 200){
+            if (response.status === 200) {
                 toast.success(`You unfollowed ${username}`)
                 setDisplayedList(prevList => prevList.filter(user => user._id !== unfollowUserId));
-        if (userId === unfollowUserId) setIsFollowing(false);
+                if (userId === unfollowUserId) setIsFollowing(false);
 
             }
-            else{
+            else {
                 setFollowCounts(prev => ({
                     ...prev,
                     followingCount: prev.followingCount + 1
-                  }));
+                }));
                 toast.error(response.message)
             }
         }
@@ -74,32 +74,32 @@ const FollowListModal = ({ list,userId,setIsFollowing,setShowModal,setFollowCoun
         }
     }
 
-    function filterList(){
-         const searchQueryLower = formData.searchQuery.toLowerCase().trim();
-    
-    if (searchQueryLower === '') {
-        setDisplayedList(fullList);
-    } else {
-        const newList = fullList.filter((item) => {
-            const usernameLower = item.username.toLowerCase();
-            const nameLower = item.name.toLowerCase();
-            return usernameLower.includes(searchQueryLower) || nameLower.includes(searchQueryLower);
-        });
-        setDisplayedList(newList);
-    }
+    function filterList() {
+        const searchQueryLower = formData.searchQuery.toLowerCase().trim();
+
+        if (searchQueryLower === '') {
+            setDisplayedList(fullList);
+        } else {
+            const newList = fullList.filter((item) => {
+                const usernameLower = item.username.toLowerCase();
+                const nameLower = item.name.toLowerCase();
+                return usernameLower.includes(searchQueryLower) || nameLower.includes(searchQueryLower);
+            });
+            setDisplayedList(newList);
+        }
     }
 
-    function handleSubmit(e){
+    function handleSubmit(e) {
         e.preventDefault()
         if (formData.searchQuery.trim() === '') {
             setDisplayedList(fullList);
         }
-         
+
     }
 
-useEffect(()=>{
-filterList()
- },[formData.searchQuery])
+    useEffect(() => {
+        filterList()
+    }, [formData.searchQuery])
 
     useEffect(() => {
         getList()
@@ -115,7 +115,7 @@ filterList()
             <p>{list}</p>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <InputField type="text" name='searchQuery' placeholder="Search" value={formData.searchQuery} onChange={handleChange}/>
+                    <InputField type="text" name='searchQuery' placeholder="Search" value={formData.searchQuery} onChange={handleChange} />
                 </div>
             </form>
             <ul>
@@ -124,23 +124,23 @@ filterList()
 
                         const { username, profileImg, _id } = item
 
-                        if(userId === _id) setIsFollowing('Unfollow')
-                         return (
+                        if (userId === _id) setIsFollowing('Unfollow')
+                        return (
                             <li key={_id}>
-                                <Link to={`/profile/${username}`} state={item} onClick={()=>setShowModal(false)}>
+                                <Link to={`/profile/${username}`} state={item} onClick={() => setShowModal(false)}>
                                     <img src={`http://localhost:8000/${profileImg}`} alt="" />
                                     <span>{item.username}</span>
                                 </Link>
-                                { list==='Followings' && isOwnProfile && <div className={styles.btn}>
-                                     <span onClick={()=>handleUnfollow(_id,username)}>Unfollow</span> 
+                                {list === 'Followings' && isOwnProfile && <div className={styles.btn}>
+                                    <span onClick={() => handleUnfollow(_id, username)}>Unfollow</span>
                                 </div>
                                 }
                             </li>
                         )
-                    } 
-                   
+                    }
+
                     ) :
-                    <p>No {list}</p>
+                        <p>No {list}</p>
                 }
 
             </ul>
@@ -150,4 +150,3 @@ filterList()
 
 export default FollowListModal
 
- 

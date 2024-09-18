@@ -1,5 +1,4 @@
-import { useMemo, useRef, useState} from "react";
-import Lottie from "lottie-react";
+import { useEffect, useMemo, useRef, useState,lazy,Suspense} from "react";
 import { FileField, InputField } from "../../common/input/Form";
 import popup from "../../assets/popup.json";
 import styles from "./styles/styles.module.css";
@@ -8,11 +7,12 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useCreateBlogMutation, useUpdateBlogMutation, useUploadImgMutation } from "../../reduxToolkit/slices/apiSlice";
 import { useLocation } from "react-router-dom";
+import indexStyle from "../../styles/index.module.scss"
+
 const BlogEditor = () => {
 
-  const [showPopup, setShowPopup] = useState(false);
-  const {state} = useLocation()
- 
+   const {state} = useLocation()
+
 const [blogContent, setBlogContent] = useState({
   title: state?.title || "",
   readTime: state?.readTime || "",
@@ -27,6 +27,7 @@ const [editorContent, setEditorContent] = useState(state?.textBody || "");
   const [createBlog, { isLoading }] = useCreateBlogMutation()
   const [uploadImg] = useUploadImgMutation()
   const editorRef = useRef(null);
+  const editorContainerRef = useRef(null);
 
 
   const imageHandler = () => {
@@ -40,7 +41,6 @@ const [editorContent, setEditorContent] = useState(state?.textBody || "");
       const formData = new FormData();
       formData.append('file', file);
 
-      // Replace with your own upload logic
       const response = await uploadImg(formData).unwrap()
       const url = `http://localhost:8000/${response.url}` ;
  
@@ -52,16 +52,14 @@ const [editorContent, setEditorContent] = useState(state?.textBody || "");
    const modules = useMemo(() => ({
     toolbar: {
       container: [
-        [{ font: [] }],
-        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-        [{ color: [] }, { background: [] }],
         ["bold", "italic", "underline", "strike"],
         [{ script:  "sub" }, { script:  "super" }],
         ["blockquote", "code-block"],
         [{ list:  "ordered" }, { list:  "bullet" }],
-        [{ indent:  "-1" }, { indent:  "+1" }, { align: [] }],
+        [{ indent:  "-1" }, { indent:  "+1" }],
         ["link", "image", "video"],
-        ["clean"],
+        [{ font: [] }],
+        [{"size": []},{ align: [] },{ color: [] }, { background: [] }],
         
       ],
       handlers: {
@@ -132,9 +130,7 @@ const [editorContent, setEditorContent] = useState(state?.textBody || "");
         await createBlog(blogFormData).unwrap()
 
         if (blogResponse.status === 201 || blogResponse.status === 200) {
-           setShowPopup(true)
-          toast.success("Whoah! You made a mark 🤩")
-          setTimeout(() => { setShowPopup(false) }, 3000)
+          toast.success("Whoah! You made a mark 🤩, check your post")
         } else {
           toast.error(blogResponse?.message || "Error creating blog post")
         }
@@ -148,38 +144,46 @@ const [editorContent, setEditorContent] = useState(state?.textBody || "");
     }
   
   }
+
+  useEffect(() => {
+    const setToolbarWidth = () => {
+      const toolbar = document.querySelector('.ql-toolbar');
+      const container = editorContainerRef.current;
+      if (toolbar && container) {
+        toolbar.style.width = `${container.offsetWidth}px`;
+      }
+    };
+
+    setToolbarWidth();
+    window.addEventListener('resize', setToolbarWidth);
+
+    return () => {
+      window.removeEventListener('resize', setToolbarWidth);
+    };
+  }, []);
  
   return (
-    <div className={styles.editor_container}>
-      
-      {showPopup && (
-         <div className={styles.popup_overlay}>
-          <Lottie
-            animationData={popup}
-            loop={true}
-            autoplay={true}
-            className={styles.popup}
-          />
-          </div>
-        )}
-      
+    <section className={styles.editor_wrapper}>
+    <div className={styles.hide_content}>
+      </div>
+    <section className={styles.editor_container}>     
       <div className={styles.publish}>
-      <button onClick={handlePublish}>{isLoading || isUpdateLoading ? 'Loading...' :( state ? 'Update' :'Publish')}</button>
+      <button className={indexStyle.btn} onClick={handlePublish}>{isLoading || isUpdateLoading ? 'Loading...' :( state ? 'Update' :'Publish')}</button>
       </div>
        
-      <div className={styles.text_editor}>
+      <div className={styles.text_editor}  ref={editorContainerRef}>
         <form className={styles.header} encType="multipart/form-data">
           <div className={`${styles.thumbnail_container} ${thumbnail?.name !== '' ? styles.no_underline : ''}`}>
-            <FileField name="thumbnail" placeholder="Add thumbnail here..." className={styles.create_blog_file} image={thumbnail.file} onChange={handleImg} />
+            <FileField name="thumbnail" placeholder="Add thumbnail..." className={styles.create_blog_file} image={thumbnail.file} onChange={handleImg} />
           </div>
           {thumbnail?.preview && <img src={thumbnail?.preview} alt="Thumbnail Image" />}
 
           <div className={`${styles.title_container} ${thumbnail?.name !== '' ? styles.no_underline : ''}`}>
-            <InputField type="text" name="title" placeholder=" Add title here..." className={styles.create_blog_file} onChange={handleBlogContent} value={blogContent.title}/>
+            <InputField type="text" name="title" placeholder=" Add title..." className={styles.create_blog_file} onChange={handleBlogContent} value={blogContent.title}/>
           </div>
 
           <div className={`${styles.readtime_container} ${thumbnail?.name !== '' ? styles.no_underline : ''}`}>
-            <InputField type="text" name="readTime" placeholder="Add read time in mins here..." onChange={handleBlogContent} value={blogContent.readTime} />
+            <InputField type="text" name="readTime" placeholder="Add read time in mins..." onChange={handleBlogContent} value={blogContent.readTime} />
           </div>
         </form>
 
@@ -198,7 +202,8 @@ const [editorContent, setEditorContent] = useState(state?.textBody || "");
         </div>
 
       </div>
-    </div>
+    </section>
+    </section>
   );
 };
 

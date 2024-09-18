@@ -1,13 +1,10 @@
 /* eslint-disable react/prop-types */
 import { BiImageAdd } from "react-icons/bi"
 import styles from "./styles/styles.module.css"
-import { useEffect } from "react"
- 
+import indexStyle from "../../styles/index.module.scss" 
 export const FormName = ({name})=>{
   return (
-    <>
     <h2 className={styles.name}>{name}</h2>
-    </>
   )
 }
 
@@ -36,6 +33,6 @@ export const FileField = ({name,placeholder,className,onChange,image}) => {
 
 export const Button = ({name,width})=>{
   return (
-    <button className={styles.name} style={{"width":`${width}`}}>{name}</button>
+    <button className={indexStyle.btn} style={{"width":`${width}`}}>{name}</button>
   )
 }

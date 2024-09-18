@@ -8,10 +8,8 @@
   display: flex;
   flex-direction: column;
   text-align: center;
-}
-
-.footer > * {
-  margin: 1.5rem 1rem;
+  font-size: clamp(13px, 2vw, 15px);
+  gap: 2rem;
 }
 
 .fMain {
@@ -32,6 +30,7 @@
   padding: 1.3em;
   margin-inline: 1rem;
   text-wrap: balance;
+  margin-bottom: 0;
 }
 
 .links {
