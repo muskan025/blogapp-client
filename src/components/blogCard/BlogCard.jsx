@@ -11,10 +11,10 @@ import { BlogContent } from "../BlogContent";
 import { useDeleteBlogMutation, useGetAllBlogsQuery, useLikeBlogsMutation } from "../../reduxToolkit/slices/apiSlice";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import { LazyLoadImage,trackWindowScroll} from 'react-lazy-load-image-component';
+import { LazyLoadImage, trackWindowScroll } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
-const BlogCard = ({ image = true, blogHeader = true, comp, user, titleFont, profileImg, blogId, blogImage, niche, blogTitle, textBody, username, date, likes, likesCount, readTime, data,scrollPosition }) => {
+const BlogCard = ({ image = true, blogHeader = true, comp, user, titleFont, profileImg, blogId, blogImage, niche, blogTitle, textBody, username, date, likes, likesCount, readTime, data, scrollPosition }) => {
 
   const [showMore, setShowMore] = useState(false)
   const [isBlogLiked, setIsBlogLiked] = useState(false)
@@ -23,11 +23,11 @@ const BlogCard = ({ image = true, blogHeader = true, comp, user, titleFont, prof
   const { author, isAuth } = useSelector((state) => state.userData)
   const isOwnProfile = isAuth && author?.username === username;
   const { data: allBlogs } = useGetAllBlogsQuery();
- 
+
   const currentBlog = allBlogs?.find(blog => blog._id === blogId);
 
   const likesNum = currentBlog?.likesCount || 0;
-   
+
   async function handleLike() {
     try {
       await likeBlogs({ blogId, username }).unwrap()
@@ -83,18 +83,18 @@ const BlogCard = ({ image = true, blogHeader = true, comp, user, titleFont, prof
 
   useEffect(() => {
     checkIsBlogLiked()
-  }, [author,likes])
+  }, [author, likes])
 
   return (
     <div className={styles.masonry_item}>
       {
         image ? (<div className={styles.blog_img_container}>
           <Link to={`/blog/${blogId}`} state={data}>
-          
-             <LazyLoadImage
+
+            <LazyLoadImage
               src={blogImage}
               alt="Blog Image"
-              effect="blur" 
+              effect="blur"
               scrollPosition={scrollPosition}
               className={styles.blog_img}
               wrapperClassName={styles.blog_img_wrapper}
@@ -112,10 +112,10 @@ const BlogCard = ({ image = true, blogHeader = true, comp, user, titleFont, prof
                   <BiDotsHorizontalRounded />
                   {showMore && <ul>
                     <li>
-                      <BsPen />
-                      <span>
-                        <Link to={`/create-blog/${username}`} state={data}>Edit</Link>
-                      </span>
+                      <Link to={`/create-blog/${username}`} state={data}>
+                        <BsPen />
+                        <span>Edit</span>
+                        </Link>
                     </li>
                     <li className={styles.delete}>
                       <BsTrash />

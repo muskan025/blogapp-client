@@ -84,6 +84,10 @@ align-items: center;
 
   li {
     cursor: pointer;
+
+    a{
+      margin: 0;
+    }
   }
 
   .showmore_container {

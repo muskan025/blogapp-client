@@ -23,8 +23,7 @@ const ProfileCard = ({ articleCount = true, user, blogsCount,comp }) => {
   const { username, profileImg, niche, bio, _id,} = user
   const { pathname } = useLocation();
    const userId =  _id || author?.userId
-   console.log(author.niche)
-      const authorProfile = pathname.includes(author.username)
+   const authorProfile = pathname.includes(author.username)
      
      const profileImage = authorProfile ? `http://localhost:8000/${author.profileImg}` : `http://localhost:8000/${user.profileImg}`
  
